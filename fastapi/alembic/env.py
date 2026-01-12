@@ -16,6 +16,7 @@ from core.enums import SafeEnum
 from user.User import User
 from auth.RefreshToken import RefreshToken
 from partner.Partner import Partner
+from period_log.PeriodLog import PeriodLog
 
 
 config = context.config
