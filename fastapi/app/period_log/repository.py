@@ -1,0 +1,120 @@
+"""
+ⒸAngelaMos | 2026
+repository.py
+"""
+
+from collections.abc import Sequence
+from datetime import date
+from uuid import UUID
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.base_repository import BaseRepository
+from .PeriodLog import PeriodLog
+
+
+class PeriodLogRepository(BaseRepository[PeriodLog]):
+    """
+    Database operations for PeriodLog model
+    """
+    model = PeriodLog
+
+    @classmethod
+    async def get_by_partner_id(
+        cls,
+        session: AsyncSession,
+        partner_id: UUID,
+        skip: int = 0,
+        limit: int = 100,
+    ) -> Sequence[PeriodLog]:
+        """
+        Get period logs for a partner, ordered by start_date descending
+        """
+        result = await session.execute(
+            select(PeriodLog)
+            .where(PeriodLog.partner_id == partner_id)
+            .order_by(PeriodLog.start_date.desc())
+            .offset(skip)
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+    @classmethod
+    async def get_by_partner_and_date(
+        cls,
+        session: AsyncSession,
+        partner_id: UUID,
+        start_date: date,
+    ) -> PeriodLog | None:
+        """
+        Get period log by partner and start date (unique constraint)
+        """
+        result = await session.execute(
+            select(PeriodLog)
+            .where(
+                PeriodLog.partner_id == partner_id,
+                PeriodLog.start_date == start_date,
+            )
+        )
+        return result.scalars().first()
+
+    @classmethod
+    async def get_latest_for_partner(
+        cls,
+        session: AsyncSession,
+        partner_id: UUID,
+    ) -> PeriodLog | None:
+        """
+        Get most recent period log for a partner
+        """
+        result = await session.execute(
+            select(PeriodLog)
+            .where(PeriodLog.partner_id == partner_id)
+            .order_by(PeriodLog.start_date.desc())
+            .limit(1)
+        )
+        return result.scalars().first()
+
+    @classmethod
+    async def get_actual_logs(
+        cls,
+        session: AsyncSession,
+        partner_id: UUID,
+        limit: int = 12,
+    ) -> Sequence[PeriodLog]:
+        """
+        Get actual (non-predicted) period logs for cycle calculations
+        """
+        result = await session.execute(
+            select(PeriodLog)
+            .where(
+                PeriodLog.partner_id == partner_id,
+                PeriodLog.is_predicted == False,
+            )
+            .order_by(PeriodLog.start_date.desc())
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+    @classmethod
+    async def delete_predicted_after_date(
+        cls,
+        session: AsyncSession,
+        partner_id: UUID,
+        after_date: date,
+    ) -> int:
+        """
+        Delete predicted period logs after a given date (cleanup after new actual log)
+        """
+        from sqlalchemy import delete
+
+        result = await session.execute(
+            delete(PeriodLog)
+            .where(
+                PeriodLog.partner_id == partner_id,
+                PeriodLog.is_predicted == True,
+                PeriodLog.start_date > after_date,
+            )
+        )
+        return result.rowcount
