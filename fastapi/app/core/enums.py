@@ -79,3 +79,44 @@ class HealthStatus(str, Enum):
     HEALTHY = "healthy"
     UNHEALTHY = "unhealthy"
     DEGRADED = "degraded"
+
+
+class CycleRegularity(str, Enum):
+    """
+    Menstrual cycle regularity classification
+    """
+    REGULAR = "regular"
+    SOMEWHAT_IRREGULAR = "somewhat_irregular"
+    IRREGULAR = "irregular"
+
+
+class CyclePhase(str, Enum):
+    """
+    Menstrual cycle phase
+    """
+    MENSTRUAL = "menstrual"
+    FOLLICULAR = "follicular"
+    OVULATION = "ovulation"
+    LUTEAL = "luteal"
+    UNKNOWN = "unknown"
+
+
+class Mood(str, Enum):
+    """
+    Daily mood tracking options
+    """
+    GREAT = "great"
+    GOOD = "good"
+    MEH = "meh"
+    ROUGH = "rough"
+    JUST_NOD = "just_nod"
+    PICK_YOUR_BATTLES = "pick_your_battles"
+
+
+class FlowIntensity(str, Enum):
+    """
+    Period flow intensity
+    """
+    LIGHT = "light"
+    MEDIUM = "medium"
+    HEAVY = "heavy"

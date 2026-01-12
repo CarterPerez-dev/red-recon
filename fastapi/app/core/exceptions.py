@@ -209,3 +209,99 @@ class InactiveUser(AuthenticationError):
             message = "User account is inactive",
             extra = extra
         )
+
+
+class PartnerNotFound(ResourceNotFound):
+    """
+    Raised when a partner profile is not found
+    """
+    def __init__(
+        self,
+        identifier: str | int,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            resource = "Partner",
+            identifier = identifier,
+            extra = extra
+        )
+
+
+class PartnerAlreadyExists(ConflictError):
+    """
+    Raised when user already has a partner profile
+    """
+    def __init__(
+        self,
+        user_id: str,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            message = "Partner profile already exists for this user",
+            extra = extra,
+        )
+        self.user_id = user_id
+
+
+class PeriodLogNotFound(ResourceNotFound):
+    """
+    Raised when a period log entry is not found
+    """
+    def __init__(
+        self,
+        identifier: str | int,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            resource = "PeriodLog",
+            identifier = identifier,
+            extra = extra
+        )
+
+
+class PeriodLogAlreadyExists(ConflictError):
+    """
+    Raised when period log already exists for date
+    """
+    def __init__(
+        self,
+        start_date: str,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            message = f"Period log already exists for {start_date}",
+            extra = extra,
+        )
+        self.start_date = start_date
+
+
+class DailyLogNotFound(ResourceNotFound):
+    """
+    Raised when a daily log entry is not found
+    """
+    def __init__(
+        self,
+        identifier: str | int,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            resource = "DailyLog",
+            identifier = identifier,
+            extra = extra
+        )
+
+
+class DailyLogAlreadyExists(ConflictError):
+    """
+    Raised when daily log already exists for date
+    """
+    def __init__(
+        self,
+        log_date: str,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            message = f"Daily log already exists for {log_date}",
+            extra = extra,
+        )
+        self.log_date = log_date

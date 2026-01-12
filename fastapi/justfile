@@ -215,15 +215,15 @@ db-current:
 
 [group('db-dev')]
 dev-migrate *ARGS:
-    docker compose -f dev.compose.yml exec api alembic upgrade {{ARGS}}
+    docker compose -f dev.compose.yml exec api uv run alembic upgrade {{ARGS}}
 
 [group('db-dev')]
 dev-migration message:
-    docker compose -f dev.compose.yml exec api alembic revision --autogenerate -m "{{message}}"
+    docker compose -f dev.compose.yml exec api uv run alembic revision --autogenerate -m "{{message}}"
 
 [group('db-dev')]
 dev-rollback:
-    docker compose -f dev.compose.yml exec api alembic downgrade -1
+    docker compose -f dev.compose.yml exec api uv run alembic downgrade -1
 
 # =============================================================================
 # Database (Local - no Docker)
