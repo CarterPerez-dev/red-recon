@@ -15,6 +15,7 @@ from core.Base import Base
 from core.enums import SafeEnum
 from user.User import User
 from auth.RefreshToken import RefreshToken
+from partner.Partner import Partner
 
 
 config = context.config
