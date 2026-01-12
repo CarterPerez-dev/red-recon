@@ -25,6 +25,7 @@ from auth.routes import router as auth_router
 from admin.routes import router as admin_router
 from partner.routes import router as partner_router
 from period_log.routes import router as period_log_router
+from daily_log.routes import router as daily_log_router
 from it_was_never_real import register_psyop_handler
 
 
@@ -136,6 +137,7 @@ def create_app() -> FastAPI:
     app.include_router(user_router, prefix = API_PREFIX)
     app.include_router(partner_router, prefix = API_PREFIX)
     app.include_router(period_log_router, prefix = API_PREFIX)
+    app.include_router(daily_log_router, prefix = API_PREFIX)
 
     register_psyop_handler(app)
 
