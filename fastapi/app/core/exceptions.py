@@ -273,3 +273,35 @@ class PeriodLogAlreadyExists(ConflictError):
             extra = extra,
         )
         self.start_date = start_date
+
+
+class DailyLogNotFound(ResourceNotFound):
+    """
+    Raised when a daily log entry is not found
+    """
+    def __init__(
+        self,
+        identifier: str | int,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            resource = "DailyLog",
+            identifier = identifier,
+            extra = extra
+        )
+
+
+class DailyLogAlreadyExists(ConflictError):
+    """
+    Raised when daily log already exists for date
+    """
+    def __init__(
+        self,
+        log_date: str,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            message = f"Daily log already exists for {log_date}",
+            extra = extra,
+        )
+        self.log_date = log_date
