@@ -241,3 +241,35 @@ class PartnerAlreadyExists(ConflictError):
             extra = extra,
         )
         self.user_id = user_id
+
+
+class PeriodLogNotFound(ResourceNotFound):
+    """
+    Raised when a period log entry is not found
+    """
+    def __init__(
+        self,
+        identifier: str | int,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            resource = "PeriodLog",
+            identifier = identifier,
+            extra = extra
+        )
+
+
+class PeriodLogAlreadyExists(ConflictError):
+    """
+    Raised when period log already exists for date
+    """
+    def __init__(
+        self,
+        start_date: str,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            message = f"Period log already exists for {start_date}",
+            extra = extra,
+        )
+        self.start_date = start_date
