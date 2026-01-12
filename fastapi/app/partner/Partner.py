@@ -18,6 +18,7 @@ from core.enums import CycleRegularity, SafeEnum
 if TYPE_CHECKING:
     from user.User import User
     from period_log.PeriodLog import PeriodLog
+    from daily_log.DailyLog import DailyLog
 
 
 class Partner(Base, UUIDMixin, TimestampMixin):
@@ -85,6 +86,12 @@ class Partner(Base, UUIDMixin, TimestampMixin):
     )
 
     period_logs: Mapped[list["PeriodLog"]] = relationship(
+        back_populates = "partner",
+        cascade = "all, delete-orphan",
+        lazy = "raise",
+    )
+
+    daily_logs: Mapped[list["DailyLog"]] = relationship(
         back_populates = "partner",
         cascade = "all, delete-orphan",
         lazy = "raise",
