@@ -79,3 +79,12 @@ class HealthStatus(str, Enum):
     HEALTHY = "healthy"
     UNHEALTHY = "unhealthy"
     DEGRADED = "degraded"
+
+
+class CycleRegularity(str, Enum):
+    """
+    Menstrual cycle regularity classification
+    """
+    REGULAR = "regular"
+    SOMEWHAT_IRREGULAR = "somewhat_irregular"
+    IRREGULAR = "irregular"

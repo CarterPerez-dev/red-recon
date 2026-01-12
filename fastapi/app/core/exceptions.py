@@ -209,3 +209,35 @@ class InactiveUser(AuthenticationError):
             message = "User account is inactive",
             extra = extra
         )
+
+
+class PartnerNotFound(ResourceNotFound):
+    """
+    Raised when a partner profile is not found
+    """
+    def __init__(
+        self,
+        identifier: str | int,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            resource = "Partner",
+            identifier = identifier,
+            extra = extra
+        )
+
+
+class PartnerAlreadyExists(ConflictError):
+    """
+    Raised when user already has a partner profile
+    """
+    def __init__(
+        self,
+        user_id: str,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(
+            message = "Partner profile already exists for this user",
+            extra = extra,
+        )
+        self.user_id = user_id

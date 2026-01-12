@@ -29,6 +29,7 @@ from core.Base import (
 
 if TYPE_CHECKING:
     from auth.RefreshToken import RefreshToken
+    from partner.Partner import Partner
 
 
 class User(Base, UUIDMixin, TimestampMixin):
@@ -65,6 +66,13 @@ class User(Base, UUIDMixin, TimestampMixin):
     refresh_tokens: Mapped[list[RefreshToken]] = relationship(
         back_populates = "user",
         cascade = "all, delete-orphan",
+        lazy = "raise",
+    )
+
+    partner: Mapped["Partner | None"] = relationship(
+        back_populates = "user",
+        cascade = "all, delete-orphan",
+        uselist = False,
         lazy = "raise",
     )
 

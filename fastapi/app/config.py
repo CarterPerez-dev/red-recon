@@ -34,6 +34,7 @@ from core.constants import (
     TOKEN_HASH_LENGTH,
 )
 from core.enums import (
+    CycleRegularity,
     Environment,
     HealthStatus,
     SafeEnum,
@@ -45,6 +46,7 @@ from core.enums import (
 __all__ = [
     "API_PREFIX",
     "API_VERSION",
+    "CycleRegularity",
     "DEVICE_ID_MAX_LENGTH",
     "DEVICE_NAME_MAX_LENGTH",
     "EMAIL_MAX_LENGTH",

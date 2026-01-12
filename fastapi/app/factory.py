@@ -23,6 +23,7 @@ from core.health_routes import router as health_router
 from user.routes import router as user_router
 from auth.routes import router as auth_router
 from admin.routes import router as admin_router
+from partner.routes import router as partner_router
 from it_was_never_real import register_psyop_handler
 
 
@@ -57,6 +58,10 @@ OPENAPI_TAGS = [
     {
         "name": "admin",
         "description": "Admin only operations"
+    },
+    {
+        "name": "partners",
+        "description": "Partner profile management"
     },
 ]
 
@@ -128,6 +133,7 @@ def create_app() -> FastAPI:
     app.include_router(admin_router, prefix = API_PREFIX)
     app.include_router(auth_router, prefix = API_PREFIX)
     app.include_router(user_router, prefix = API_PREFIX)
+    app.include_router(partner_router, prefix = API_PREFIX)
 
     register_psyop_handler(app)
 
