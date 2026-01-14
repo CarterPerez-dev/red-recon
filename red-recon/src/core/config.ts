@@ -21,6 +21,26 @@ export const API_ENDPOINTS = {
     ME: `/${API_VERSION}/users/me`,
     REGISTER: `/${API_VERSION}/users`,
   },
+  PARTNERS: {
+    ME: `/${API_VERSION}/partners/me`,
+    EXISTS: `/${API_VERSION}/partners/me/exists`,
+  },
+  PERIODS: {
+    BASE: `/${API_VERSION}/partners/me/periods`,
+    BY_ID: (id: string) => `/${API_VERSION}/partners/me/periods/${id}`,
+    CURRENT: `/${API_VERSION}/partners/me/periods/current`,
+  },
+  DAILY_LOGS: {
+    BASE: `/${API_VERSION}/partners/me/daily-logs`,
+    BY_DATE: (date: string) => `/${API_VERSION}/partners/me/daily-logs/${date}`,
+  },
+  CYCLE: {
+    CURRENT: `/${API_VERSION}/partners/me/cycle/current`,
+    PHASES: `/${API_VERSION}/partners/me/cycle/phases`,
+    CALENDAR: (year: number, month: number) =>
+      `/${API_VERSION}/partners/me/cycle/calendar/${year}/${month}`,
+    PATTERNS: `/${API_VERSION}/partners/me/cycle/patterns`,
+  },
 } as const
 
 export const QUERY_KEYS = {
@@ -33,11 +53,38 @@ export const QUERY_KEYS = {
     BY_ID: (id: string) => [...QUERY_KEYS.USERS.ALL, 'detail', id] as const,
     ME: () => [...QUERY_KEYS.USERS.ALL, 'me'] as const,
   },
+  PARTNERS: {
+    ALL: ['partners'] as const,
+    ME: () => [...QUERY_KEYS.PARTNERS.ALL, 'me'] as const,
+    EXISTS: () => [...QUERY_KEYS.PARTNERS.ALL, 'exists'] as const,
+  },
+  PERIODS: {
+    ALL: ['periods'] as const,
+    LIST: () => [...QUERY_KEYS.PERIODS.ALL, 'list'] as const,
+    BY_ID: (id: string) => [...QUERY_KEYS.PERIODS.ALL, 'detail', id] as const,
+    CURRENT: () => [...QUERY_KEYS.PERIODS.ALL, 'current'] as const,
+  },
+  DAILY_LOGS: {
+    ALL: ['daily-logs'] as const,
+    LIST: () => [...QUERY_KEYS.DAILY_LOGS.ALL, 'list'] as const,
+    BY_DATE: (date: string) => [...QUERY_KEYS.DAILY_LOGS.ALL, 'detail', date] as const,
+  },
+  CYCLE: {
+    ALL: ['cycle'] as const,
+    CURRENT: () => [...QUERY_KEYS.CYCLE.ALL, 'current'] as const,
+    PHASES: () => [...QUERY_KEYS.CYCLE.ALL, 'phases'] as const,
+    CALENDAR: (year: number, month: number) =>
+      [...QUERY_KEYS.CYCLE.ALL, 'calendar', year, month] as const,
+    PATTERNS: () => [...QUERY_KEYS.CYCLE.ALL, 'patterns'] as const,
+  },
 } as const
 
 export const QUERY_CONFIG = {
   STALE_TIME: {
     USER: 1000 * 60 * 5,
+    PARTNER: 1000 * 60 * 10,
+    CYCLE: 1000 * 60 * 5,
+    CALENDAR: 1000 * 60 * 15,
     STATIC: Number.POSITIVE_INFINITY,
     FREQUENT: 1000 * 30,
   },
