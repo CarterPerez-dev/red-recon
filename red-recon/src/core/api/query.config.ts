@@ -84,6 +84,18 @@ export const QUERY_STRATEGIES = {
     gcTime: QUERY_CONFIG.GC_TIME.DEFAULT,
     retry: QUERY_CONFIG.RETRY.NONE,
   },
+  partner: {
+    staleTime: QUERY_CONFIG.STALE_TIME.PARTNER,
+    gcTime: QUERY_CONFIG.GC_TIME.LONG,
+  },
+  cycle: {
+    staleTime: QUERY_CONFIG.STALE_TIME.CYCLE,
+    gcTime: QUERY_CONFIG.GC_TIME.DEFAULT,
+  },
+  calendar: {
+    staleTime: QUERY_CONFIG.STALE_TIME.CALENDAR,
+    gcTime: QUERY_CONFIG.GC_TIME.LONG,
+  },
 } as const
 
 export type QueryStrategy = keyof typeof QUERY_STRATEGIES
