@@ -52,7 +52,7 @@ export const usePartner = (): UseQueryResult<PartnerResponse, Error> => {
 
 const checkPartnerExists = async (): Promise<boolean> => {
   const response = await apiClient.get<boolean>(API_ENDPOINTS.PARTNERS.EXISTS)
-  return response.data
+  return response.data === true
 }
 
 export const usePartnerExists = (): UseQueryResult<boolean, Error> => {
