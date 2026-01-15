@@ -19,13 +19,14 @@ import {
   Frown,
   Hand,
   Meh,
+  Pencil,
   Smile,
   Sun,
   Swords,
   Zap,
 } from 'lucide-react-native'
 import type React from 'react'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Stack, Text, TextArea, XStack, YStack } from 'tamagui'
@@ -294,6 +295,15 @@ export default function LogScreen(): React.ReactElement {
     }
   }, [existingLog])
 
+  const [showSuccess, setShowSuccess] = useState(false)
+
+  useEffect(() => {
+    if (showSuccess) {
+      const timer = setTimeout(() => setShowSuccess(false), 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [showSuccess])
+
   const handleSave = useCallback(() => {
     haptics.medium()
 
@@ -305,23 +315,32 @@ export default function LogScreen(): React.ReactElement {
       notes: notes.trim() || null,
     }
 
+    const onSuccess = (): void => {
+      haptics.success()
+      setShowSuccess(true)
+    }
+
     if (existingLog) {
-      updateLog.mutate({
-        date: dateStr,
-        data: {
-          mood,
-          energy_level: energy,
-          symptoms,
-          notes: notes.trim() || null,
+      updateLog.mutate(
+        {
+          date: dateStr,
+          data: {
+            mood,
+            energy_level: energy,
+            symptoms,
+            notes: notes.trim() || null,
+          },
         },
-      })
+        { onSuccess }
+      )
     } else {
-      createLog.mutate(data)
+      createLog.mutate(data, { onSuccess })
     }
   }, [createLog, dateStr, energy, existingLog, mood, notes, symptoms, updateLog])
 
   const isSaving = createLog.isPending || updateLog.isPending
   const hasChanges = mood !== null || energy !== null || symptoms.length > 0 || notes.trim().length > 0
+  const isEditing = existingLog !== null && existingLog !== undefined
 
   return (
     <DottedBackground>
@@ -333,21 +352,49 @@ export default function LogScreen(): React.ReactElement {
               justifyContent="space-between"
               marginBottom="$2"
             >
-              <Text fontSize={26} fontWeight="600" color="$textDefault">
-                Daily Log
-              </Text>
-              {isToday && (
-                <Stack
-                  backgroundColor="$accent"
-                  paddingVertical="$1"
-                  paddingHorizontal="$2"
-                  borderRadius="$2"
-                >
-                  <Text fontSize={10} color="$white" fontWeight="500">
-                    TODAY
-                  </Text>
-                </Stack>
-              )}
+              <XStack alignItems="center" gap="$3">
+                <Text fontSize={26} fontWeight="600" color="$textDefault">
+                  Daily Log
+                </Text>
+                {isEditing && (
+                  <XStack alignItems="center" gap="$1">
+                    <Pencil size={12} color={colors.textMuted.val} />
+                    <Text fontSize={10} color="$textMuted">
+                      Editing
+                    </Text>
+                  </XStack>
+                )}
+              </XStack>
+              <XStack gap="$2">
+                {showSuccess && (
+                  <Stack
+                    backgroundColor="#22c55e"
+                    paddingVertical="$1"
+                    paddingHorizontal="$2"
+                    borderRadius="$2"
+                    flexDirection="row"
+                    alignItems="center"
+                    gap="$1"
+                  >
+                    <Check size={10} color={colors.white.val} />
+                    <Text fontSize={10} color="$white" fontWeight="500">
+                      Saved
+                    </Text>
+                  </Stack>
+                )}
+                {isToday && !showSuccess && (
+                  <Stack
+                    backgroundColor="$accent"
+                    paddingVertical="$1"
+                    paddingHorizontal="$2"
+                    borderRadius="$2"
+                  >
+                    <Text fontSize={10} color="$white" fontWeight="500">
+                      TODAY
+                    </Text>
+                  </Stack>
+                )}
+              </XStack>
             </XStack>
 
             <XStack alignItems="center" justifyContent="space-between">
