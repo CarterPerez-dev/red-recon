@@ -3,14 +3,14 @@
  * settings.tsx
  */
 
-import { useCurrentUser, useLogout } from '@/api/hooks'
+import { useCurrentUser, useLogout, usePartner } from '@/api/hooks'
 import { useBiometricsEnabled, useUIStore } from '@/core/lib'
 import { DottedBackground } from '@/shared/components'
 import { getBiometricLabel, useBiometrics } from '@/shared/hooks'
 import { haptics } from '@/shared/utils'
 import { colors } from '@/theme/tokens'
 import { router } from 'expo-router'
-import { ChevronRight, LogOut, Shield, User } from 'lucide-react-native'
+import { ChevronRight, Heart, LogOut, Shield, User } from 'lucide-react-native'
 import type React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Stack, Switch, Text, YStack } from 'tamagui'
@@ -52,6 +52,7 @@ function SettingsRow({
 export default function SettingsScreen(): React.ReactElement {
   const logout = useLogout()
   const { data: user } = useCurrentUser()
+  const { data: partner } = usePartner()
   const { biometryType, isAvailable, isEnrolled } = useBiometrics()
   const biometricsEnabled = useBiometricsEnabled()
   const setBiometricsEnabled = useUIStore((s) => s.setBiometricsEnabled)
@@ -92,14 +93,45 @@ export default function SettingsScreen(): React.ReactElement {
           borderColor="$borderDefault"
           borderRadius="$4"
           overflow="hidden"
-          marginBottom="$6"
+          marginBottom="$4"
         >
           <SettingsRow
             icon={<User size={18} color={colors.textLight.val} />}
             label="Profile"
             onPress={() => router.push('/(app)/profile')}
           />
+        </Stack>
 
+        {partner && (
+          <Stack
+            backgroundColor="$bgSurface100"
+            borderWidth={1}
+            borderColor="$borderDefault"
+            borderRadius="$4"
+            overflow="hidden"
+            marginBottom="$4"
+          >
+            <Stack padding="$4" borderBottomWidth={1} borderBottomColor="$borderMuted">
+              <Text fontSize={12} color="$textMuted" fontWeight="500">
+                PARTNER
+              </Text>
+            </Stack>
+            <SettingsRow
+              icon={<Heart size={18} color={colors.accent.val} />}
+              label={partner.name}
+              onPress={() => router.push('/(app)/partner-edit')}
+            />
+          </Stack>
+        )}
+
+        <Stack
+          backgroundColor="$bgSurface100"
+          borderWidth={1}
+          borderColor="$borderDefault"
+          borderRadius="$4"
+          overflow="hidden"
+          marginBottom="$6"
+        >
           {canUseBiometrics && (
             <SettingsRow
               icon={<Shield size={18} color={colors.textLight.val} />}
