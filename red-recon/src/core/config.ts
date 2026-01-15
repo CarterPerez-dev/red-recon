@@ -7,7 +7,7 @@ const API_VERSION = 'v1'
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: `/${API_VERSION}/auth/login`,
+    LOGIN: `/${API_VERSION}/auth/login-mobile`,
     REFRESH: `/${API_VERSION}/auth/refresh`,
     REFRESH_MOBILE: `/${API_VERSION}/auth/refresh-mobile`,
     LOGOUT: `/${API_VERSION}/auth/logout`,
