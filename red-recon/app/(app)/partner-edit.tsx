@@ -9,12 +9,12 @@ import { DottedBackground, Input } from '@/shared/components'
 import { haptics } from '@/shared/utils'
 import { colors } from '@/theme/tokens'
 import { router } from 'expo-router'
-import { ArrowLeft, Calendar, Check, Clock, Trash2, User } from 'lucide-react-native'
+import { ArrowLeft, Bell, Calendar, Check, Clock, Trash2, User } from 'lucide-react-native'
 import type React from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Stack, Text, XStack, YStack } from 'tamagui'
+import { Stack, Switch, Text, XStack, YStack } from 'tamagui'
 
 const CYCLE_LENGTH_OPTIONS = [21, 24, 26, 28, 30, 32, 35] as const
 const PERIOD_LENGTH_OPTIONS = [3, 4, 5, 6, 7] as const
@@ -156,6 +156,10 @@ export default function PartnerEditScreen(): React.ReactElement {
   const [cycleLength, setCycleLength] = useState(28)
   const [periodLength, setPeriodLength] = useState(5)
   const [regularity, setRegularity] = useState<CycleRegularity>(CycleRegularity.REGULAR)
+  const [periodReminder, setPeriodReminder] = useState(true)
+  const [pmsAlert, setPmsAlert] = useState(true)
+  const [ovulationAlert, setOvulationAlert] = useState(false)
+  const [reminderDays, setReminderDays] = useState(3)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
@@ -165,6 +169,10 @@ export default function PartnerEditScreen(): React.ReactElement {
       setCycleLength(partner.average_cycle_length)
       setPeriodLength(partner.average_period_length)
       setRegularity(partner.cycle_regularity)
+      setPeriodReminder(partner.notification_period_reminder)
+      setPmsAlert(partner.notification_pms_alert)
+      setOvulationAlert(partner.notification_ovulation_alert)
+      setReminderDays(partner.reminder_days_before)
     }
   }, [partner])
 
@@ -180,7 +188,11 @@ export default function PartnerEditScreen(): React.ReactElement {
     (name !== partner.name ||
       cycleLength !== partner.average_cycle_length ||
       periodLength !== partner.average_period_length ||
-      regularity !== partner.cycle_regularity)
+      regularity !== partner.cycle_regularity ||
+      periodReminder !== partner.notification_period_reminder ||
+      pmsAlert !== partner.notification_pms_alert ||
+      ovulationAlert !== partner.notification_ovulation_alert ||
+      reminderDays !== partner.reminder_days_before)
 
   const canSubmit = name.trim().length >= 1 && hasChanges
 
@@ -194,6 +206,10 @@ export default function PartnerEditScreen(): React.ReactElement {
       average_cycle_length: cycleLength,
       average_period_length: periodLength,
       cycle_regularity: regularity,
+      notification_period_reminder: periodReminder,
+      notification_pms_alert: pmsAlert,
+      notification_ovulation_alert: ovulationAlert,
+      reminder_days_before: reminderDays,
     }
 
     updatePartner.mutate(data, {
@@ -202,7 +218,7 @@ export default function PartnerEditScreen(): React.ReactElement {
         setShowSuccess(true)
       },
     })
-  }, [canSubmit, cycleLength, name, periodLength, regularity, updatePartner])
+  }, [canSubmit, cycleLength, name, ovulationAlert, periodLength, periodReminder, pmsAlert, regularity, reminderDays, updatePartner])
 
   const handleDelete = useCallback(() => {
     haptics.warning()
@@ -307,6 +323,152 @@ export default function PartnerEditScreen(): React.ReactElement {
             />
 
             <RegularityPicker selected={regularity} onChange={setRegularity} />
+
+            <Stack
+              backgroundColor="$bgSurface100"
+              borderWidth={1}
+              borderColor="$borderDefault"
+              borderRadius="$4"
+              padding="$4"
+            >
+              <XStack alignItems="center" gap="$2" marginBottom="$4">
+                <Bell size={14} color={colors.textLight.val} />
+                <Text fontSize={14} fontWeight="500" color="$textDefault">
+                  Notifications
+                </Text>
+              </XStack>
+
+              <YStack gap="$4">
+                <XStack alignItems="center" justifyContent="space-between">
+                  <YStack flex={1}>
+                    <Text fontSize={14} color="$textDefault">
+                      Period Reminder
+                    </Text>
+                    <Text fontSize={12} color="$textMuted">
+                      Get notified before her period starts
+                    </Text>
+                  </YStack>
+                  <Switch
+                    size="$4"
+                    checked={periodReminder}
+                    onCheckedChange={(checked) => {
+                      haptics.selection()
+                      setPeriodReminder(checked)
+                    }}
+                    backgroundColor={periodReminder ? colors.accent.val : colors.bgSurface200.val}
+                    borderWidth={1}
+                    borderColor={periodReminder ? colors.accent.val : colors.borderDefault.val}
+                    width={52}
+                    height={28}
+                  >
+                    <Switch.Thumb
+                      backgroundColor={colors.white.val}
+                      animation="quick"
+                      width={24}
+                      height={24}
+                    />
+                  </Switch>
+                </XStack>
+
+                {periodReminder && (
+                  <YStack>
+                    <Text fontSize={12} color="$textMuted" marginBottom="$2">
+                      Remind me this many days before
+                    </Text>
+                    <XStack gap="$2">
+                      {[1, 2, 3, 5, 7].map((days) => (
+                        <Pressable
+                          key={days}
+                          onPress={() => {
+                            haptics.selection()
+                            setReminderDays(days)
+                          }}
+                        >
+                          <Stack
+                            paddingVertical="$2"
+                            paddingHorizontal="$3"
+                            borderRadius="$3"
+                            borderWidth={1}
+                            borderColor={reminderDays === days ? '$accent' : '$borderDefault'}
+                            backgroundColor={reminderDays === days ? '$accent' : '$bgSurface200'}
+                          >
+                            <Text
+                              fontSize={12}
+                              color={reminderDays === days ? '$white' : '$textLight'}
+                              fontWeight="500"
+                            >
+                              {days}
+                            </Text>
+                          </Stack>
+                        </Pressable>
+                      ))}
+                    </XStack>
+                  </YStack>
+                )}
+
+                <XStack alignItems="center" justifyContent="space-between">
+                  <YStack flex={1}>
+                    <Text fontSize={14} color="$textDefault">
+                      PMS Alert
+                    </Text>
+                    <Text fontSize={12} color="$textMuted">
+                      Heads up for the luteal phase
+                    </Text>
+                  </YStack>
+                  <Switch
+                    size="$4"
+                    checked={pmsAlert}
+                    onCheckedChange={(checked) => {
+                      haptics.selection()
+                      setPmsAlert(checked)
+                    }}
+                    backgroundColor={pmsAlert ? colors.accent.val : colors.bgSurface200.val}
+                    borderWidth={1}
+                    borderColor={pmsAlert ? colors.accent.val : colors.borderDefault.val}
+                    width={52}
+                    height={28}
+                  >
+                    <Switch.Thumb
+                      backgroundColor={colors.white.val}
+                      animation="quick"
+                      width={24}
+                      height={24}
+                    />
+                  </Switch>
+                </XStack>
+
+                <XStack alignItems="center" justifyContent="space-between">
+                  <YStack flex={1}>
+                    <Text fontSize={14} color="$textDefault">
+                      Ovulation Alert
+                    </Text>
+                    <Text fontSize={12} color="$textMuted">
+                      Know when she's most fertile
+                    </Text>
+                  </YStack>
+                  <Switch
+                    size="$4"
+                    checked={ovulationAlert}
+                    onCheckedChange={(checked) => {
+                      haptics.selection()
+                      setOvulationAlert(checked)
+                    }}
+                    backgroundColor={ovulationAlert ? colors.accent.val : colors.bgSurface200.val}
+                    borderWidth={1}
+                    borderColor={ovulationAlert ? colors.accent.val : colors.borderDefault.val}
+                    width={52}
+                    height={28}
+                  >
+                    <Switch.Thumb
+                      backgroundColor={colors.white.val}
+                      animation="quick"
+                      width={24}
+                      height={24}
+                    />
+                  </Switch>
+                </XStack>
+              </YStack>
+            </Stack>
 
             <Stack
               backgroundColor="$bgSurface75"
