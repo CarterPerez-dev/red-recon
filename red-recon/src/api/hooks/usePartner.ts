@@ -137,3 +137,33 @@ export const useUpdatePartner = (): UseMutationResult<
     },
   })
 }
+
+const deletePartner = async (): Promise<void> => {
+  await apiClient.delete(API_ENDPOINTS.PARTNERS.ME)
+}
+
+export interface DeletePartnerResult {
+  message: string
+}
+
+export const useDeletePartner = (): UseMutationResult<
+  DeletePartnerResult,
+  Error,
+  void
+> => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (): Promise<DeletePartnerResult> => {
+      await deletePartner()
+      return { message: PARTNER_SUCCESS_MESSAGES.DELETED }
+    },
+    onSuccess: (): void => {
+      queryClient.setQueryData(partnerQueries.me(), null)
+      queryClient.setQueryData(partnerQueries.exists(), false)
+      queryClient.removeQueries({ queryKey: QUERY_KEYS.CYCLE.ALL })
+      queryClient.removeQueries({ queryKey: QUERY_KEYS.PERIODS.ALL })
+      queryClient.removeQueries({ queryKey: QUERY_KEYS.DAILY_LOGS.ALL })
+    },
+  })
+}
