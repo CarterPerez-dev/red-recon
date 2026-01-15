@@ -103,6 +103,7 @@ async def refresh_token(
 @limiter.limit(settings.RATE_LIMIT_AUTH)
 async def login_mobile(
     request: Request,
+    response: Response,
     auth_service: AuthServiceDep,
     ip: ClientIP,
     form_data: Annotated[OAuth2PasswordRequestForm,
