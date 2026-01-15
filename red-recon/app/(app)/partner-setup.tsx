@@ -9,15 +9,16 @@ import { DottedBackground, Input } from '@/shared/components'
 import { haptics } from '@/shared/utils'
 import { colors } from '@/theme/tokens'
 import { router } from 'expo-router'
-import { ArrowLeft, Calendar, Clock, User } from 'lucide-react-native'
+import { ArrowLeft, Calendar, CalendarDays, Clock, User } from 'lucide-react-native'
 import type React from 'react'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Stack, Text, XStack, YStack } from 'tamagui'
 
 const CYCLE_LENGTH_OPTIONS = [21, 24, 26, 28, 30, 32, 35] as const
 const PERIOD_LENGTH_OPTIONS = [3, 4, 5, 6, 7] as const
+const DAYS_AGO_OPTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 10, 14, 21, 28] as const
 
 const REGULARITY_OPTIONS = [
   { value: CycleRegularity.REGULAR, label: 'Regular', desc: 'Predictable timing' },
@@ -147,6 +148,81 @@ function RegularityPicker({
   )
 }
 
+function LastPeriodPicker({
+  selected,
+  onChange,
+}: {
+  selected: number | null
+  onChange: (daysAgo: number | null) => void
+}): React.ReactElement {
+  return (
+    <Stack
+      backgroundColor="$bgSurface100"
+      borderWidth={1}
+      borderColor="$borderDefault"
+      borderRadius="$4"
+      padding="$4"
+    >
+      <XStack alignItems="center" gap="$2" marginBottom="$2">
+        <CalendarDays size={14} color={colors.textLight.val} />
+        <Text fontSize={14} fontWeight="500" color="$textDefault">
+          Last Period Started
+        </Text>
+      </XStack>
+      <Text fontSize={12} color="$textMuted" marginBottom="$3">
+        How many days ago did her last period start?
+      </Text>
+      <XStack flexWrap="wrap" gap="$2">
+        {DAYS_AGO_OPTIONS.map((days) => {
+          const label = days === 0 ? 'Today' : days === 1 ? '1 day' : `${days} days`
+          return (
+            <Pressable
+              key={days}
+              onPress={() => {
+                haptics.selection()
+                onChange(days)
+              }}
+            >
+              <Stack
+                paddingVertical="$2"
+                paddingHorizontal="$3"
+                borderRadius="$3"
+                borderWidth={1}
+                borderColor={selected === days ? '$accent' : '$borderDefault'}
+                backgroundColor={selected === days ? '$accent' : '$bgSurface200'}
+              >
+                <Text
+                  fontSize={12}
+                  color={selected === days ? '$white' : '$textLight'}
+                  fontWeight="500"
+                >
+                  {label}
+                </Text>
+              </Stack>
+            </Pressable>
+          )
+        })}
+      </XStack>
+      {selected === null && (
+        <Pressable onPress={() => onChange(-1)}>
+          <Text fontSize={12} color="$accent" marginTop="$3">
+            Not sure / Skip for now
+          </Text>
+        </Pressable>
+      )}
+      {selected === -1 && (
+        <Text fontSize={12} color="$textMuted" marginTop="$3">
+          Skipped - you can log the first period later
+        </Text>
+      )}
+    </Stack>
+  )
+}
+
+function formatDate(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 export default function PartnerSetupScreen(): React.ReactElement {
   const createPartner = useCreatePartner()
 
@@ -154,8 +230,16 @@ export default function PartnerSetupScreen(): React.ReactElement {
   const [cycleLength, setCycleLength] = useState(28)
   const [periodLength, setPeriodLength] = useState(5)
   const [regularity, setRegularity] = useState<CycleRegularity>(CycleRegularity.REGULAR)
+  const [lastPeriodDaysAgo, setLastPeriodDaysAgo] = useState<number | null>(null)
 
-  const canSubmit = name.trim().length >= 1
+  const canSubmit = name.trim().length >= 1 && lastPeriodDaysAgo !== null
+
+  const lastPeriodDate = useMemo(() => {
+    if (lastPeriodDaysAgo === null || lastPeriodDaysAgo < 0) return null
+    const d = new Date()
+    d.setDate(d.getDate() - lastPeriodDaysAgo)
+    return formatDate(d)
+  }, [lastPeriodDaysAgo])
 
   const handleSubmit = useCallback(() => {
     if (!canSubmit) return
@@ -167,6 +251,7 @@ export default function PartnerSetupScreen(): React.ReactElement {
       average_cycle_length: cycleLength,
       average_period_length: periodLength,
       cycle_regularity: regularity,
+      last_period_start: lastPeriodDate,
     }
 
     createPartner.mutate(data, {
@@ -174,7 +259,7 @@ export default function PartnerSetupScreen(): React.ReactElement {
         router.replace('/(app)/(tabs)/home')
       },
     })
-  }, [canSubmit, createPartner, cycleLength, name, periodLength, regularity])
+  }, [canSubmit, createPartner, cycleLength, lastPeriodDate, name, periodLength, regularity])
 
   return (
     <DottedBackground>
@@ -240,6 +325,11 @@ export default function PartnerSetupScreen(): React.ReactElement {
             />
 
             <RegularityPicker selected={regularity} onChange={setRegularity} />
+
+            <LastPeriodPicker
+              selected={lastPeriodDaysAgo}
+              onChange={setLastPeriodDaysAgo}
+            />
 
             <Stack
               backgroundColor="$bgSurface75"
