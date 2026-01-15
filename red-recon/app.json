@@ -21,10 +21,15 @@
         "ITSAppUsesNonExemptEncryption": false
       }
     },
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#dc2626"
+    },
     "plugins": [
       "expo-router",
       "expo-secure-store",
       "expo-local-authentication",
+      "expo-notifications",
       [
         "expo-splash-screen",
         {
