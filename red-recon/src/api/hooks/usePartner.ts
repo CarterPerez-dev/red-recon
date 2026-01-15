@@ -50,15 +50,9 @@ export const usePartner = (): UseQueryResult<PartnerResponse, Error> => {
   })
 }
 
-interface PartnerExistsResponse {
-  exists: boolean
-}
-
 const checkPartnerExists = async (): Promise<boolean> => {
-  const response = await apiClient.get<PartnerExistsResponse>(
-    API_ENDPOINTS.PARTNERS.EXISTS
-  )
-  return response.data.exists
+  const response = await apiClient.get<boolean>(API_ENDPOINTS.PARTNERS.EXISTS)
+  return response.data
 }
 
 export const usePartnerExists = (): UseQueryResult<boolean, Error> => {
