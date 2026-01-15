@@ -20,22 +20,28 @@ const MONTH_NAMES = [
   'July', 'August', 'September', 'October', 'November', 'December'
 ] as const
 
+interface CalendarCellData {
+  day: CalendarDay | null
+  dayNumber: number | null
+  isToday: boolean
+}
+
 function CalendarDayCell({
-  day,
-  isToday,
+  data,
   onPress,
 }: {
-  day: CalendarDay | null
-  isToday: boolean
+  data: CalendarCellData
   onPress?: () => void
 }): React.ReactElement {
-  if (!day) {
+  const { day, dayNumber, isToday } = data
+
+  if (dayNumber === null) {
     return <Stack flex={1} aspectRatio={1} />
   }
 
-  const phaseColor = PHASE_COLORS[day.phase] ?? colors.textMuted.val
-  const isPeriod = day.is_period
-  const isPredicted = day.is_predicted_period && !day.is_period
+  const phaseColor = day ? (PHASE_COLORS[day.phase] ?? colors.textMuted.val) : colors.textMuted.val
+  const isPeriod = day?.is_period ?? false
+  const isPredicted = (day?.is_predicted_period ?? false) && !isPeriod
 
   return (
     <Pressable style={{ flex: 1 }} onPress={onPress}>
@@ -48,16 +54,15 @@ function CalendarDayCell({
         backgroundColor={isPeriod ? '#dc2626' : isPredicted ? '$bgSurface200' : 'transparent'}
         borderWidth={isToday ? 2 : 0}
         borderColor={isToday ? '$accent' : 'transparent'}
-        borderStyle={isPredicted && !isPeriod ? 'dashed' : 'solid'}
       >
         <Text
           fontSize={14}
           fontWeight={isToday ? '600' : '400'}
           color={isPeriod ? '$white' : isToday ? '$accent' : '$textDefault'}
         >
-          {new Date(day.date).getDate()}
+          {dayNumber}
         </Text>
-        {day.cycle_day && (
+        {day?.cycle_day && (
           <Stack
             position="absolute"
             bottom={2}
@@ -81,12 +86,13 @@ function CalendarGrid({
   year: number
   month: number
 }): React.ReactElement {
-  const today = useMemo(() => {
+  const todayStr = useMemo(() => {
     const d = new Date()
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
   }, [])
 
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay()
+  const daysInMonth = new Date(year, month, 0).getDate()
 
   const daysByDate = useMemo(() => {
     const map = new Map<string, CalendarDay>()
@@ -96,20 +102,22 @@ function CalendarGrid({
     return map
   }, [days])
 
-  const daysInMonth = new Date(year, month, 0).getDate()
-
-  const weeks: (CalendarDay | null)[][] = useMemo(() => {
-    const result: (CalendarDay | null)[][] = []
-    let currentWeek: (CalendarDay | null)[] = []
+  const weeks: CalendarCellData[][] = useMemo(() => {
+    const result: CalendarCellData[][] = []
+    let currentWeek: CalendarCellData[] = []
 
     for (let i = 0; i < firstDayOfMonth; i++) {
-      currentWeek.push(null)
+      currentWeek.push({ day: null, dayNumber: null, isToday: false })
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`
       const day = daysByDate.get(dateStr) ?? null
-      currentWeek.push(day)
+      currentWeek.push({
+        day,
+        dayNumber: d,
+        isToday: dateStr === todayStr,
+      })
 
       if (currentWeek.length === 7) {
         result.push(currentWeek)
@@ -118,14 +126,14 @@ function CalendarGrid({
     }
 
     while (currentWeek.length > 0 && currentWeek.length < 7) {
-      currentWeek.push(null)
+      currentWeek.push({ day: null, dayNumber: null, isToday: false })
     }
     if (currentWeek.length === 7) {
       result.push(currentWeek)
     }
 
     return result
-  }, [daysByDate, daysInMonth, firstDayOfMonth, month, year])
+  }, [daysByDate, daysInMonth, firstDayOfMonth, month, todayStr, year])
 
   return (
     <YStack gap="$1">
@@ -140,11 +148,10 @@ function CalendarGrid({
       </XStack>
       {weeks.map((week, weekIndex) => (
         <XStack key={`week-${weekIndex}`} gap="$1">
-          {week.map((day, dayIndex) => (
+          {week.map((cellData, dayIndex) => (
             <CalendarDayCell
-              key={day?.date ?? `empty-${weekIndex}-${dayIndex}`}
-              day={day}
-              isToday={day?.date === today}
+              key={cellData.dayNumber ?? `empty-${weekIndex}-${dayIndex}`}
+              data={cellData}
             />
           ))}
         </XStack>
