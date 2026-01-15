@@ -3,13 +3,13 @@
  * partner-edit.tsx
  */
 
-import { usePartner, useUpdatePartner } from '@/api/hooks'
+import { useDeletePartner, usePartner, useUpdatePartner } from '@/api/hooks'
 import { CycleRegularity, type PartnerUpdate } from '@/api/types'
 import { DottedBackground, Input } from '@/shared/components'
 import { haptics } from '@/shared/utils'
 import { colors } from '@/theme/tokens'
 import { router } from 'expo-router'
-import { ArrowLeft, Calendar, Check, Clock, User } from 'lucide-react-native'
+import { ArrowLeft, Calendar, Check, Clock, Trash2, User } from 'lucide-react-native'
 import type React from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView } from 'react-native'
@@ -150,12 +150,14 @@ function RegularityPicker({
 export default function PartnerEditScreen(): React.ReactElement {
   const { data: partner, isLoading } = usePartner()
   const updatePartner = useUpdatePartner()
+  const deletePartner = useDeletePartner()
 
   const [name, setName] = useState('')
   const [cycleLength, setCycleLength] = useState(28)
   const [periodLength, setPeriodLength] = useState(5)
   const [regularity, setRegularity] = useState<CycleRegularity>(CycleRegularity.REGULAR)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
     if (partner) {
@@ -201,6 +203,15 @@ export default function PartnerEditScreen(): React.ReactElement {
       },
     })
   }, [canSubmit, cycleLength, name, periodLength, regularity, updatePartner])
+
+  const handleDelete = useCallback(() => {
+    haptics.warning()
+    deletePartner.mutate(undefined, {
+      onSuccess: () => {
+        router.replace('/(app)/partner-setup')
+      },
+    })
+  }, [deletePartner])
 
   if (isLoading) {
     return (
@@ -305,6 +316,81 @@ export default function PartnerEditScreen(): React.ReactElement {
               <Text fontSize={12} color="$textLighter" lineHeight={18}>
                 Changes to cycle length will update future predictions. Past data remains unchanged.
               </Text>
+            </Stack>
+
+            <Stack
+              backgroundColor="$bgSurface100"
+              borderWidth={1}
+              borderColor="$borderDefault"
+              borderRadius="$4"
+              padding="$4"
+              marginTop="$4"
+            >
+              <Text fontSize={14} fontWeight="500" color="$textDefault" marginBottom="$2">
+                Danger Zone
+              </Text>
+              <Text fontSize={12} color="$textMuted" marginBottom="$4">
+                Deleting will remove all tracking data including periods and daily logs.
+              </Text>
+              {showDeleteConfirm ? (
+                <YStack gap="$2">
+                  <Text fontSize={12} color="$errorDefault" fontWeight="500">
+                    Are you sure? This cannot be undone.
+                  </Text>
+                  <XStack gap="$2">
+                    <Pressable
+                      style={{ flex: 1 }}
+                      onPress={() => setShowDeleteConfirm(false)}
+                    >
+                      <Stack
+                        backgroundColor="$bgSurface200"
+                        borderRadius="$3"
+                        paddingVertical="$3"
+                        alignItems="center"
+                      >
+                        <Text fontSize={12} fontWeight="500" color="$textLight">
+                          Cancel
+                        </Text>
+                      </Stack>
+                    </Pressable>
+                    <Pressable
+                      style={{ flex: 1 }}
+                      onPress={handleDelete}
+                      disabled={deletePartner.isPending}
+                    >
+                      <Stack
+                        backgroundColor="$errorDefault"
+                        borderRadius="$3"
+                        paddingVertical="$3"
+                        alignItems="center"
+                        opacity={deletePartner.isPending ? 0.7 : 1}
+                      >
+                        <Text fontSize={12} fontWeight="500" color="$white">
+                          {deletePartner.isPending ? 'Deleting...' : 'Delete'}
+                        </Text>
+                      </Stack>
+                    </Pressable>
+                  </XStack>
+                </YStack>
+              ) : (
+                <Pressable onPress={() => setShowDeleteConfirm(true)}>
+                  <Stack
+                    borderWidth={1}
+                    borderColor="$errorDefault"
+                    borderRadius="$3"
+                    paddingVertical="$3"
+                    flexDirection="row"
+                    alignItems="center"
+                    justifyContent="center"
+                    gap="$2"
+                  >
+                    <Trash2 size={14} color={colors.errorDefault.val} />
+                    <Text fontSize={12} fontWeight="500" color="$errorDefault">
+                      Delete Partner
+                    </Text>
+                  </Stack>
+                </Pressable>
+              )}
             </Stack>
           </ScrollView>
 
