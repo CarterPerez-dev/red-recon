@@ -8,7 +8,7 @@ import { CyclePhase, PHASE_COLORS, PHASE_LABELS } from '@/api/types'
 import { DottedBackground } from '@/shared/components'
 import { colors } from '@/theme/tokens'
 import { router } from 'expo-router'
-import { CalendarDays, Clock, Droplet, TrendingUp } from 'lucide-react-native'
+import { Bell, CalendarDays, Clock, Droplet, Heart, TrendingUp } from 'lucide-react-native'
 import type React from 'react'
 import { ActivityIndicator, Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -110,26 +110,62 @@ function PhaseTip({ tip }: { tip: string }): React.ReactElement {
   )
 }
 
+function FeatureItem({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode
+  title: string
+  description: string
+}): React.ReactElement {
+  return (
+    <XStack gap="$3" alignItems="flex-start">
+      <Stack
+        width={36}
+        height={36}
+        borderRadius={18}
+        backgroundColor="$bgSurface200"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {icon}
+      </Stack>
+      <YStack flex={1}>
+        <Text fontSize={14} fontWeight="500" color="$textDefault">
+          {title}
+        </Text>
+        <Text fontSize={12} color="$textMuted" marginTop="$1">
+          {description}
+        </Text>
+      </YStack>
+    </XStack>
+  )
+}
+
 function SetupPrompt(): React.ReactElement {
   return (
     <DottedBackground>
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-        <YStack flex={1} padding="$6" justifyContent="center" alignItems="center">
-          <Stack
-            backgroundColor="$bgSurface100"
-            borderWidth={1}
-            borderColor="$borderDefault"
-            borderRadius="$4"
-            padding="$6"
-            width="100%"
-            maxWidth={340}
-          >
+        <YStack flex={1} padding="$6">
+          <YStack flex={1} justifyContent="center" alignItems="center">
+            <Stack
+              width={64}
+              height={64}
+              borderRadius={32}
+              backgroundColor="$accent"
+              alignItems="center"
+              justifyContent="center"
+              marginBottom="$4"
+            >
+              <Heart size={32} color={colors.white.val} />
+            </Stack>
             <Text
-              fontSize={22}
+              fontSize={26}
               fontWeight="600"
               color="$textDefault"
               textAlign="center"
-              marginBottom="$3"
+              marginBottom="$2"
             >
               Welcome to RedRecon
             </Text>
@@ -137,23 +173,60 @@ function SetupPrompt(): React.ReactElement {
               fontSize={14}
               color="$textLighter"
               textAlign="center"
-              marginBottom="$6"
+              marginBottom="$8"
             >
-              Set up your partner's cycle info to get started with predictions and insights.
+              Understand her cycle, be a better partner.
             </Text>
+
+            <Stack
+              backgroundColor="$bgSurface100"
+              borderWidth={1}
+              borderColor="$borderDefault"
+              borderRadius="$4"
+              padding="$5"
+              width="100%"
+              maxWidth={340}
+              gap="$4"
+            >
+              <FeatureItem
+                icon={<CalendarDays size={18} color={colors.accent.val} />}
+                title="Track Her Cycle"
+                description="Know what phase she's in and what to expect"
+              />
+              <FeatureItem
+                icon={<Bell size={18} color={colors.accent.val} />}
+                title="Get Notified"
+                description="Heads up before period, PMS, and ovulation"
+              />
+              <FeatureItem
+                icon={<TrendingUp size={18} color={colors.accent.val} />}
+                title="Daily Insights"
+                description="Tips for each phase to support her better"
+              />
+            </Stack>
+          </YStack>
+
+          <Stack marginTop="$6">
             <Pressable onPress={() => router.push('/(app)/partner-setup')}>
               <Stack
                 backgroundColor="$accent"
                 borderRadius="$3"
-                paddingVertical="$3"
-                paddingHorizontal="$5"
+                paddingVertical="$4"
                 alignItems="center"
               >
                 <Text fontSize={14} fontWeight="500" color="$white">
-                  Set Up Partner
+                  Get Started
                 </Text>
               </Stack>
             </Pressable>
+            <Text
+              fontSize={12}
+              color="$textMuted"
+              textAlign="center"
+              marginTop="$3"
+            >
+              Takes less than a minute to set up
+            </Text>
           </Stack>
         </YStack>
       </SafeAreaView>
