@@ -5,7 +5,9 @@
 
 import { useCalendarMonth } from '@/api/hooks'
 import { type CalendarDay, PHASE_COLORS, PHASE_LABELS } from '@/api/types'
+import { PeriodLogSheet } from '@/features/calendar'
 import { DottedBackground } from '@/shared/components'
+import { haptics } from '@/shared/utils'
 import { colors } from '@/theme/tokens'
 import { ChevronLeft, ChevronRight } from 'lucide-react-native'
 import type React from 'react'
@@ -81,10 +83,12 @@ function CalendarGrid({
   days,
   year,
   month,
+  onDayPress,
 }: {
   days: CalendarDay[]
   year: number
   month: number
+  onDayPress: (dateStr: string, day: CalendarDay | null) => void
 }): React.ReactElement {
   const todayStr = useMemo(() => {
     const d = new Date()
@@ -148,12 +152,18 @@ function CalendarGrid({
       </XStack>
       {weeks.map((week, weekIndex) => (
         <XStack key={`week-${weekIndex}`} gap="$1">
-          {week.map((cellData, dayIndex) => (
-            <CalendarDayCell
-              key={cellData.dayNumber ?? `empty-${weekIndex}-${dayIndex}`}
-              data={cellData}
-            />
-          ))}
+          {week.map((cellData, dayIndex) => {
+            const dateStr = cellData.dayNumber
+              ? `${year}-${String(month).padStart(2, '0')}-${String(cellData.dayNumber).padStart(2, '0')}`
+              : null
+            return (
+              <CalendarDayCell
+                key={cellData.dayNumber ?? `empty-${weekIndex}-${dayIndex}`}
+                data={cellData}
+                onPress={dateStr ? () => onDayPress(dateStr, cellData.day) : undefined}
+              />
+            )
+          })}
         </XStack>
       ))}
     </YStack>
@@ -205,6 +215,10 @@ export default function CalendarScreen(): React.ReactElement {
 
   const { data: calendarMonth, isLoading } = useCalendarMonth(year, month)
 
+  const [sheetVisible, setSheetVisible] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [selectedCalendarDay, setSelectedCalendarDay] = useState<CalendarDay | null>(null)
+
   const goToPreviousMonth = useCallback(() => {
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
   }, [])
@@ -215,6 +229,13 @@ export default function CalendarScreen(): React.ReactElement {
 
   const goToToday = useCallback(() => {
     setCurrentDate(new Date())
+  }, [])
+
+  const handleDayPress = useCallback((dateStr: string, day: CalendarDay | null) => {
+    haptics.light()
+    setSelectedDate(dateStr)
+    setSelectedCalendarDay(day)
+    setSheetVisible(true)
   }, [])
 
   return (
@@ -267,6 +288,7 @@ export default function CalendarScreen(): React.ReactElement {
                 days={calendarMonth?.days ?? []}
                 year={year}
                 month={month}
+                onDayPress={handleDayPress}
               />
             )}
           </Stack>
@@ -301,6 +323,13 @@ export default function CalendarScreen(): React.ReactElement {
             </XStack>
           </Stack>
         </YStack>
+
+        <PeriodLogSheet
+          visible={sheetVisible}
+          selectedDate={selectedDate ?? ''}
+          calendarDay={selectedCalendarDay}
+          onClose={() => setSheetVisible(false)}
+        />
       </SafeAreaView>
     </DottedBackground>
   )
