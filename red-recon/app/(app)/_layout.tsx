@@ -7,6 +7,7 @@ import {
   getBiometricLabel,
   useBiometricAuth,
   useBiometrics,
+  useNotifications,
   useSession,
 } from '@/shared/hooks'
 import { colors } from '@/theme/tokens'
@@ -15,6 +16,11 @@ import { Lock } from 'lucide-react-native'
 import type React from 'react'
 import { ActivityIndicator, Pressable, View } from 'react-native'
 import { Text, YStack } from 'tamagui'
+
+function NotificationManager(): null {
+  useNotifications()
+  return null
+}
 
 function LockScreen({ onUnlock }: { onUnlock: () => void }): React.ReactElement {
   const { biometryType } = useBiometrics()
@@ -71,11 +77,14 @@ export default function AppLayout(): React.ReactElement {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: '#121212' },
-      }}
-    />
+    <>
+      <NotificationManager />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: '#121212' },
+        }}
+      />
+    </>
   )
 }
