@@ -3,45 +3,280 @@
  * home.tsx
  */
 
-import { useCurrentUser } from '@/api/hooks'
+import { useCycleStatus, usePartner, usePartnerExists, usePhaseInfo } from '@/api/hooks'
+import { CyclePhase, PHASE_COLORS, PHASE_LABELS } from '@/api/types'
 import { DottedBackground } from '@/shared/components'
+import { colors } from '@/theme/tokens'
+import { router } from 'expo-router'
+import { CalendarDays, Clock, Droplet, TrendingUp } from 'lucide-react-native'
 import type React from 'react'
+import { ActivityIndicator, Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Stack, Text, YStack } from 'tamagui'
+import { Stack, Text, XStack, YStack } from 'tamagui'
+
+function PhaseIndicator({
+  phase,
+  phaseDay,
+}: {
+  phase: CyclePhase
+  phaseDay: number
+}): React.ReactElement {
+  const phaseColor = PHASE_COLORS[phase] ?? colors.textMuted.val
+  const phaseLabel = PHASE_LABELS[phase] ?? 'Unknown'
+
+  return (
+    <Stack
+      backgroundColor="$bgSurface100"
+      borderWidth={1}
+      borderColor="$borderDefault"
+      borderRadius="$4"
+      padding="$5"
+    >
+      <XStack alignItems="center" gap="$3" marginBottom="$3">
+        <Stack
+          width={12}
+          height={12}
+          borderRadius={6}
+          backgroundColor={phaseColor}
+        />
+        <Text fontSize={18} fontWeight="600" color="$textDefault">
+          {phaseLabel} Phase
+        </Text>
+      </XStack>
+      <Text fontSize={14} color="$textLighter">
+        Day {phaseDay} of this phase
+      </Text>
+    </Stack>
+  )
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+  subtext,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+  subtext?: string
+}): React.ReactElement {
+  return (
+    <Stack
+      flex={1}
+      backgroundColor="$bgSurface100"
+      borderWidth={1}
+      borderColor="$borderDefault"
+      borderRadius="$4"
+      padding="$4"
+    >
+      <XStack alignItems="center" gap="$2" marginBottom="$2">
+        {icon}
+        <Text fontSize={12} color="$textLighter">
+          {label}
+        </Text>
+      </XStack>
+      <Text fontSize={20} fontWeight="600" color="$textDefault">
+        {value}
+      </Text>
+      {subtext && (
+        <Text fontSize={12} color="$textMuted" marginTop="$1">
+          {subtext}
+        </Text>
+      )}
+    </Stack>
+  )
+}
+
+function PhaseTip({ tip }: { tip: string }): React.ReactElement {
+  return (
+    <Stack
+      backgroundColor="$bgSurface100"
+      borderWidth={1}
+      borderColor="$borderDefault"
+      borderRadius="$4"
+      padding="$5"
+    >
+      <XStack alignItems="center" gap="$2" marginBottom="$3">
+        <TrendingUp size={16} color={colors.accent.val} />
+        <Text fontSize={14} fontWeight="500" color="$textDefault">
+          Today's Tip
+        </Text>
+      </XStack>
+      <Text fontSize={14} color="$textLight" lineHeight={20}>
+        {tip}
+      </Text>
+    </Stack>
+  )
+}
+
+function SetupPrompt(): React.ReactElement {
+  return (
+    <DottedBackground>
+      <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+        <YStack flex={1} padding="$6" justifyContent="center" alignItems="center">
+          <Stack
+            backgroundColor="$bgSurface100"
+            borderWidth={1}
+            borderColor="$borderDefault"
+            borderRadius="$4"
+            padding="$6"
+            width="100%"
+            maxWidth={340}
+          >
+            <Text
+              fontSize={22}
+              fontWeight="600"
+              color="$textDefault"
+              textAlign="center"
+              marginBottom="$3"
+            >
+              Welcome to RedRecon
+            </Text>
+            <Text
+              fontSize={14}
+              color="$textLighter"
+              textAlign="center"
+              marginBottom="$6"
+            >
+              Set up your partner's cycle info to get started with predictions and insights.
+            </Text>
+            <Pressable onPress={() => router.push('/(app)/partner-setup')}>
+              <Stack
+                backgroundColor="$accent"
+                borderRadius="$3"
+                paddingVertical="$3"
+                paddingHorizontal="$5"
+                alignItems="center"
+              >
+                <Text fontSize={14} fontWeight="500" color="$white">
+                  Set Up Partner
+                </Text>
+              </Stack>
+            </Pressable>
+          </Stack>
+        </YStack>
+      </SafeAreaView>
+    </DottedBackground>
+  )
+}
+
+function DashboardContent(): React.ReactElement {
+  const { data: partner } = usePartner()
+  const { data: cycleStatus, isLoading: cycleLoading } = useCycleStatus()
+  const { data: phaseInfo } = usePhaseInfo()
+
+  if (cycleLoading) {
+    return (
+      <YStack flex={1} justifyContent="center" alignItems="center">
+        <ActivityIndicator size="large" color={colors.accent.val} />
+      </YStack>
+    )
+  }
+
+  const currentPhaseInfo = phaseInfo?.find(
+    (p) => p.phase === cycleStatus?.phase
+  )
+  const tip = currentPhaseInfo?.tip ?? 'Check back for tips during active tracking.'
+
+  const daysUntilText = cycleStatus?.days_until_period
+    ? cycleStatus.days_until_period === 1
+      ? '1 day'
+      : `${cycleStatus.days_until_period} days`
+    : 'N/A'
+
+  return (
+    <YStack flex={1} padding="$6">
+      <Stack marginBottom="$6">
+        <Text
+          fontSize={26}
+          fontWeight="600"
+          color="$textDefault"
+          marginBottom="$2"
+        >
+          {partner?.name ?? 'Partner'}
+        </Text>
+        <Text fontSize={14} color="$textLighter">
+          Cycle Day {cycleStatus?.current_day ?? '--'} of {cycleStatus?.cycle_length ?? '--'}
+        </Text>
+      </Stack>
+
+      {cycleStatus && (
+        <PhaseIndicator
+          phase={cycleStatus.phase}
+          phaseDay={cycleStatus.phase_day}
+        />
+      )}
+
+      <XStack gap="$3" marginTop="$4">
+        <StatCard
+          icon={<Clock size={14} color={colors.textLighter.val} />}
+          label="Until Period"
+          value={daysUntilText}
+          subtext={cycleStatus?.is_period_active ? 'Active now' : undefined}
+        />
+        <StatCard
+          icon={<Droplet size={14} color={colors.textLighter.val} />}
+          label="Period Length"
+          value={`${partner?.average_period_length ?? '--'} days`}
+        />
+      </XStack>
+
+      <Stack marginTop="$4">
+        <PhaseTip tip={tip} />
+      </Stack>
+
+      <Stack marginTop="$4">
+        <Pressable onPress={() => router.push('/(app)/(tabs)/calendar')}>
+          <Stack
+            backgroundColor="$bgSurface100"
+            borderWidth={1}
+            borderColor="$borderDefault"
+            borderRadius="$4"
+            padding="$4"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <XStack alignItems="center" gap="$3">
+              <CalendarDays size={18} color={colors.textLight.val} />
+              <Text fontSize={14} color="$textDefault">
+                View Calendar
+              </Text>
+            </XStack>
+            <Text fontSize={12} color="$textMuted">
+              Track & Predict
+            </Text>
+          </Stack>
+        </Pressable>
+      </Stack>
+    </YStack>
+  )
+}
 
 export default function HomeScreen(): React.ReactElement {
-  const { data: user } = useCurrentUser()
+  const { data: partnerExists, isLoading } = usePartnerExists()
+
+  if (isLoading) {
+    return (
+      <DottedBackground>
+        <SafeAreaView style={{ flex: 1 }} edges={['top']}>
+          <YStack flex={1} justifyContent="center" alignItems="center">
+            <ActivityIndicator size="large" color={colors.accent.val} />
+          </YStack>
+        </SafeAreaView>
+      </DottedBackground>
+    )
+  }
+
+  if (!partnerExists) {
+    return <SetupPrompt />
+  }
 
   return (
     <DottedBackground>
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-        <YStack flex={1} padding="$6">
-        <Stack marginBottom="$6">
-          <Text
-            fontSize={26}
-            fontWeight="600"
-            color="$textDefault"
-            marginBottom="$2"
-          >
-            Welcome{user?.full_name ? `, ${user.full_name}` : ''}
-          </Text>
-          <Text fontSize={16} color="$textLighter">
-            Your dashboard
-          </Text>
-        </Stack>
-
-        <Stack
-          backgroundColor="$bgSurface100"
-          borderWidth={1}
-          borderColor="$borderDefault"
-          borderRadius="$4"
-          padding="$5"
-        >
-          <Text fontSize={14} color="$textLight">
-            This is a template home screen. Customize it for your app.
-          </Text>
-        </Stack>
-        </YStack>
+        <DashboardContent />
       </SafeAreaView>
     </DottedBackground>
   )
