@@ -9,8 +9,20 @@ from datetime import date
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import Date, ForeignKey, Integer, String, Boolean, Text, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import (
+    Date, 
+    ForeignKey, 
+    Integer, 
+    String, 
+    Boolean, 
+    Text, 
+    UniqueConstraint,
+)
+from sqlalchemy.orm import (
+    Mapped, 
+    mapped_column, 
+    relationship,
+)
 
 from core.Base import Base, TimestampMixin, UUIDMixin
 from core.enums import FlowIntensity, SafeEnum
