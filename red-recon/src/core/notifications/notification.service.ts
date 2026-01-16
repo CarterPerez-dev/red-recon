@@ -3,7 +3,6 @@
  * notification.service.ts
  */
 
-import * as Notifications from 'expo-notifications'
 import { Platform } from 'react-native'
 import type { CycleStatus, PartnerResponse } from '@/api/types'
 import {
@@ -13,15 +12,32 @@ import {
   type NotificationConfig,
 } from '@/api/types'
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-})
+let Notifications: typeof import('expo-notifications') | null = null
+let isNativeModuleAvailable = false
+
+try {
+  const NotificationsModule = require('expo-notifications')
+  Notifications = NotificationsModule
+  isNativeModuleAvailable = true
+
+  NotificationsModule.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  })
+} catch {
+  console.warn('expo-notifications native module not available (Expo Go). Build a dev client for notifications.')
+}
 
 export async function requestNotificationPermissions(): Promise<boolean> {
+  if (!isNativeModuleAvailable || !Notifications) {
+    return false
+  }
+
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
       name: 'default',
@@ -41,18 +57,30 @@ export async function requestNotificationPermissions(): Promise<boolean> {
 }
 
 export async function cancelAllScheduledNotifications(): Promise<void> {
+  if (!isNativeModuleAvailable || !Notifications) {
+    return
+  }
+
   await Notifications.cancelAllScheduledNotificationsAsync()
 }
 
 export async function cancelNotificationByIdentifier(
   identifier: string
 ): Promise<void> {
+  if (!isNativeModuleAvailable || !Notifications) {
+    return
+  }
+
   await Notifications.cancelScheduledNotificationAsync(identifier)
 }
 
 export async function scheduleNotification(
   config: NotificationConfig
 ): Promise<string | null> {
+  if (!isNativeModuleAvailable || !Notifications) {
+    return null
+  }
+
   const now = new Date()
 
   if (config.triggerDate <= now) {

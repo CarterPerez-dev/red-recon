@@ -28405,15 +28405,15 @@
       "heading": {
         "family": "Inter",
         "lineHeight": {
-          "1": 22,
-          "2": 24,
-          "3": 26,
-          "4": 28,
+          "1": 21,
+          "2": 23,
+          "3": 25,
+          "4": 27,
           "5": 30,
           "6": 34,
           "7": 38,
-          "8": 42,
-          "9": 40,
+          "8": 44,
+          "9": 50,
           "10": 56,
           "11": 65,
           "12": 72,
@@ -28421,7 +28421,7 @@
           "14": 102,
           "15": 124,
           "16": 144,
-          "true": 24
+          "true": 25
         },
         "weight": {
           "1": "400",
@@ -28430,16 +28430,16 @@
           "4": "400",
           "5": "500",
           "6": "600",
-          "7": "600",
-          "8": "600",
-          "9": "600",
-          "10": "600",
-          "11": "600",
-          "12": "600",
-          "13": "600",
-          "14": "600",
-          "15": "600",
-          "16": "600",
+          "7": "700",
+          "8": "700",
+          "9": "700",
+          "10": "700",
+          "11": "700",
+          "12": "700",
+          "13": "700",
+          "14": "700",
+          "15": "700",
+          "16": "700",
           "true": "400"
         },
         "letterSpacing": {
@@ -28447,30 +28447,30 @@
           "2": 0,
           "3": 0,
           "4": 0,
-          "5": 0,
-          "6": 0,
-          "7": 0,
-          "8": 0,
-          "9": 0,
-          "10": 0,
-          "11": 0,
-          "12": 0,
-          "13": 0,
-          "14": 0,
-          "15": 0,
-          "16": 0,
+          "5": -0.2,
+          "6": -0.3,
+          "7": -0.4,
+          "8": -0.4,
+          "9": -0.4,
+          "10": -0.4,
+          "11": -0.4,
+          "12": -0.4,
+          "13": -0.4,
+          "14": -0.4,
+          "15": -0.4,
+          "16": -0.4,
           "true": 0
         },
         "size": {
-          "1": 12,
-          "2": 14,
-          "3": 16,
-          "4": 18,
+          "1": 11,
+          "2": 13,
+          "3": 15,
+          "4": 17,
           "5": 20,
           "6": 24,
           "7": 28,
-          "8": 32,
-          "9": 30,
+          "8": 34,
+          "9": 40,
           "10": 46,
           "11": 55,
           "12": 62,
@@ -28478,7 +28478,7 @@
           "14": 92,
           "15": 114,
           "16": 134,
-          "true": 14
+          "true": 15
         },
         "face": {
           "100": {
@@ -28500,28 +28500,28 @@
             "normal": "InterSemiBold"
           },
           "700": {
-            "normal": "InterSemiBold"
+            "normal": "InterBold"
           },
           "800": {
-            "normal": "InterSemiBold"
+            "normal": "InterBold"
           },
           "900": {
-            "normal": "InterSemiBold"
+            "normal": "InterBold"
           }
         }
       },
       "body": {
         "family": "Inter",
         "lineHeight": {
-          "1": 22,
-          "2": 24,
-          "3": 26,
-          "4": 28,
+          "1": 21,
+          "2": 23,
+          "3": 25,
+          "4": 27,
           "5": 30,
           "6": 34,
           "7": 38,
-          "8": 42,
-          "9": 40,
+          "8": 44,
+          "9": 50,
           "10": 56,
           "11": 65,
           "12": 72,
@@ -28529,7 +28529,7 @@
           "14": 102,
           "15": 124,
           "16": 144,
-          "true": 24
+          "true": 25
         },
         "weight": {
           "1": "400",
@@ -28538,16 +28538,16 @@
           "4": "400",
           "5": "500",
           "6": "600",
-          "7": "600",
-          "8": "600",
-          "9": "600",
-          "10": "600",
-          "11": "600",
-          "12": "600",
-          "13": "600",
-          "14": "600",
-          "15": "600",
-          "16": "600",
+          "7": "700",
+          "8": "700",
+          "9": "700",
+          "10": "700",
+          "11": "700",
+          "12": "700",
+          "13": "700",
+          "14": "700",
+          "15": "700",
+          "16": "700",
           "true": "400"
         },
         "letterSpacing": {
@@ -28555,30 +28555,30 @@
           "2": 0,
           "3": 0,
           "4": 0,
-          "5": 0,
-          "6": 0,
-          "7": 0,
-          "8": 0,
-          "9": 0,
-          "10": 0,
-          "11": 0,
-          "12": 0,
-          "13": 0,
-          "14": 0,
-          "15": 0,
-          "16": 0,
+          "5": -0.2,
+          "6": -0.3,
+          "7": -0.4,
+          "8": -0.4,
+          "9": -0.4,
+          "10": -0.4,
+          "11": -0.4,
+          "12": -0.4,
+          "13": -0.4,
+          "14": -0.4,
+          "15": -0.4,
+          "16": -0.4,
           "true": 0
         },
         "size": {
-          "1": 12,
-          "2": 14,
-          "3": 16,
-          "4": 18,
+          "1": 11,
+          "2": 13,
+          "3": 15,
+          "4": 17,
           "5": 20,
           "6": 24,
           "7": 28,
-          "8": 32,
-          "9": 30,
+          "8": 34,
+          "9": 40,
           "10": 46,
           "11": 55,
           "12": 62,
@@ -28586,7 +28586,7 @@
           "14": 92,
           "15": 114,
           "16": 134,
-          "true": 14
+          "true": 15
         },
         "face": {
           "100": {
@@ -28608,13 +28608,13 @@
             "normal": "InterSemiBold"
           },
           "700": {
-            "normal": "InterSemiBold"
+            "normal": "InterBold"
           },
           "800": {
-            "normal": "InterSemiBold"
+            "normal": "InterBold"
           },
           "900": {
-            "normal": "InterSemiBold"
+            "normal": "InterBold"
           }
         }
       }
@@ -28672,175 +28672,175 @@
           "isVar": true,
           "key": "$bgDefault",
           "name": "c-bgDefault",
-          "val": "#121212",
+          "val": "#0a0a0a",
           "variable": ""
         },
         "bgAlternative": {
           "isVar": true,
           "key": "$bgAlternative",
           "name": "c-bgAlternative",
-          "val": "#0f0f0f",
+          "val": "#080808",
           "variable": ""
         },
         "bgPage": {
           "isVar": true,
           "key": "$bgPage",
           "name": "c-bgPage",
-          "val": "#1a1a1a",
+          "val": "#0f0f0f",
           "variable": ""
         },
         "bgCard": {
           "isVar": true,
           "key": "$bgCard",
           "name": "c-bgCard",
-          "val": "#101010",
+          "val": "#0c0c0c",
           "variable": ""
         },
         "bgShellBase": {
           "isVar": true,
           "key": "$bgShellBase",
           "name": "c-bgShellBase",
-          "val": "#151515",
+          "val": "#0c0c0c",
           "variable": ""
         },
         "bgShellDot": {
           "isVar": true,
           "key": "$bgShellDot",
           "name": "c-bgShellDot",
-          "val": "#1d1d1d",
+          "val": "#252525",
           "variable": ""
         },
         "bgContentBase": {
           "isVar": true,
           "key": "$bgContentBase",
           "name": "c-bgContentBase",
-          "val": "#0f0f0f",
+          "val": "#080808",
           "variable": ""
         },
         "bgContentDot": {
           "isVar": true,
           "key": "$bgContentDot",
           "name": "c-bgContentDot",
-          "val": "#171717",
+          "val": "#1f1f1f",
           "variable": ""
         },
         "bgSurface75": {
           "isVar": true,
           "key": "$bgSurface75",
           "name": "c-bgSurface75",
-          "val": "#171717",
+          "val": "#121212",
           "variable": ""
         },
         "bgSurface100": {
           "isVar": true,
           "key": "$bgSurface100",
           "name": "c-bgSurface100",
-          "val": "#181818",
+          "val": "#141414",
           "variable": ""
         },
         "bgSurface200": {
           "isVar": true,
           "key": "$bgSurface200",
           "name": "c-bgSurface200",
-          "val": "#242424",
+          "val": "#1a1a1a",
           "variable": ""
         },
         "bgSurface300": {
           "isVar": true,
           "key": "$bgSurface300",
           "name": "c-bgSurface300",
-          "val": "#292929",
+          "val": "#222222",
           "variable": ""
         },
         "bgControl": {
           "isVar": true,
           "key": "$bgControl",
           "name": "c-bgControl",
-          "val": "#1a1a1a",
+          "val": "#141414",
           "variable": ""
         },
         "bgSelection": {
           "isVar": true,
           "key": "$bgSelection",
           "name": "c-bgSelection",
-          "val": "#313131",
+          "val": "#2a2a2a",
           "variable": ""
         },
         "bgOverlay": {
           "isVar": true,
           "key": "$bgOverlay",
           "name": "c-bgOverlay",
-          "val": "#242424",
+          "val": "#1a1a1a",
           "variable": ""
         },
         "bgOverlayHover": {
           "isVar": true,
           "key": "$bgOverlayHover",
           "name": "c-bgOverlayHover",
-          "val": "#2e2e2e",
+          "val": "#222222",
           "variable": ""
         },
         "borderMuted": {
           "isVar": true,
           "key": "$borderMuted",
           "name": "c-borderMuted",
-          "val": "#242424",
+          "val": "#1a1a1a",
           "variable": ""
         },
         "borderDefault": {
           "isVar": true,
           "key": "$borderDefault",
           "name": "c-borderDefault",
-          "val": "#2e2e2e",
+          "val": "#252525",
           "variable": ""
         },
         "borderStrong": {
           "isVar": true,
           "key": "$borderStrong",
           "name": "c-borderStrong",
-          "val": "#363636",
+          "val": "#333333",
           "variable": ""
         },
         "borderStronger": {
           "isVar": true,
           "key": "$borderStronger",
           "name": "c-borderStronger",
-          "val": "#454545",
+          "val": "#404040",
           "variable": ""
         },
         "borderControl": {
           "isVar": true,
           "key": "$borderControl",
           "name": "c-borderControl",
-          "val": "#393939",
+          "val": "#303030",
           "variable": ""
         },
         "textDefault": {
           "isVar": true,
           "key": "$textDefault",
           "name": "c-textDefault",
-          "val": "#fafafa",
+          "val": "#f5f5f5",
           "variable": ""
         },
         "textLight": {
           "isVar": true,
           "key": "$textLight",
           "name": "c-textLight",
-          "val": "#b4b4b4",
+          "val": "#a3a3a3",
           "variable": ""
         },
         "textLighter": {
           "isVar": true,
           "key": "$textLighter",
           "name": "c-textLighter",
-          "val": "#898989",
+          "val": "#737373",
           "variable": ""
         },
         "textMuted": {
           "isVar": true,
           "key": "$textMuted",
           "name": "c-textMuted",
-          "val": "#4d4d4d",
+          "val": "#525252",
           "variable": ""
         },
         "white": {
@@ -28861,7 +28861,91 @@
           "isVar": true,
           "key": "$accent",
           "name": "c-accent",
-          "val": "#C15F3C",
+          "val": "#9b1c1c",
+          "variable": ""
+        },
+        "accentDark": {
+          "isVar": true,
+          "key": "$accentDark",
+          "name": "c-accentDark",
+          "val": "#7f1d1d",
+          "variable": ""
+        },
+        "accentLight": {
+          "isVar": true,
+          "key": "$accentLight",
+          "name": "c-accentLight",
+          "val": "#b91c1c",
+          "variable": ""
+        },
+        "accentMuted": {
+          "isVar": true,
+          "key": "$accentMuted",
+          "name": "c-accentMuted",
+          "val": "#450a0a",
+          "variable": ""
+        },
+        "accentSubtle": {
+          "isVar": true,
+          "key": "$accentSubtle",
+          "name": "c-accentSubtle",
+          "val": "#1c0a0a",
+          "variable": ""
+        },
+        "accentBorder": {
+          "isVar": true,
+          "key": "$accentBorder",
+          "name": "c-accentBorder",
+          "val": "#3b0f0f",
+          "variable": ""
+        },
+        "secondary": {
+          "isVar": true,
+          "key": "$secondary",
+          "name": "c-secondary",
+          "val": "#d97706",
+          "variable": ""
+        },
+        "secondaryLight": {
+          "isVar": true,
+          "key": "$secondaryLight",
+          "name": "c-secondaryLight",
+          "val": "#f59e0b",
+          "variable": ""
+        },
+        "secondaryMuted": {
+          "isVar": true,
+          "key": "$secondaryMuted",
+          "name": "c-secondaryMuted",
+          "val": "#451a03",
+          "variable": ""
+        },
+        "phaseRed": {
+          "isVar": true,
+          "key": "$phaseRed",
+          "name": "c-phaseRed",
+          "val": "#dc2626",
+          "variable": ""
+        },
+        "phasePink": {
+          "isVar": true,
+          "key": "$phasePink",
+          "name": "c-phasePink",
+          "val": "#ec4899",
+          "variable": ""
+        },
+        "phaseAmber": {
+          "isVar": true,
+          "key": "$phaseAmber",
+          "name": "c-phaseAmber",
+          "val": "#f59e0b",
+          "variable": ""
+        },
+        "phaseSlate": {
+          "isVar": true,
+          "key": "$phaseSlate",
+          "name": "c-phaseSlate",
+          "val": "#64748b",
           "variable": ""
         },
         "errorDefault": {
@@ -29196,49 +29280,49 @@
           "isVar": true,
           "key": "$1",
           "name": "t-radius-1",
-          "val": 2,
+          "val": 4,
           "variable": ""
         },
         "2": {
           "isVar": true,
           "key": "$2",
           "name": "t-radius-2",
-          "val": 4,
+          "val": 8,
           "variable": ""
         },
         "3": {
           "isVar": true,
           "key": "$3",
           "name": "t-radius-3",
-          "val": 6,
+          "val": 12,
           "variable": ""
         },
         "4": {
           "isVar": true,
           "key": "$4",
           "name": "t-radius-4",
-          "val": 8,
+          "val": 16,
           "variable": ""
         },
         "5": {
           "isVar": true,
           "key": "$5",
           "name": "t-radius-5",
-          "val": 10,
+          "val": 20,
           "variable": ""
         },
         "6": {
           "isVar": true,
           "key": "$6",
           "name": "t-radius-6",
-          "val": 12,
+          "val": 24,
           "variable": ""
         },
         "true": {
           "isVar": true,
           "key": "$true",
           "name": "t-radius-true",
-          "val": 6,
+          "val": 12,
           "variable": ""
         }
       },
@@ -29289,50 +29373,64 @@
     },
     "themes": {
       "dark": {
-        "bgDefault": "#121212",
-        "bgAlternative": "#0f0f0f",
-        "bgPage": "#1a1a1a",
-        "bgCard": "#101010",
-        "bgShellBase": "#151515",
-        "bgShellDot": "#1d1d1d",
-        "bgContentBase": "#0f0f0f",
-        "bgContentDot": "#171717",
-        "bgSurface75": "#171717",
-        "bgSurface100": "#181818",
-        "bgSurface200": "#242424",
-        "bgSurface300": "#292929",
-        "bgControl": "#1a1a1a",
-        "bgSelection": "#313131",
-        "bgOverlay": "#242424",
-        "bgOverlayHover": "#2e2e2e",
-        "borderMuted": "#242424",
-        "borderDefault": "#2e2e2e",
-        "borderStrong": "#363636",
-        "borderStronger": "#454545",
-        "borderControl": "#393939",
-        "textDefault": "#fafafa",
-        "textLight": "#b4b4b4",
-        "textLighter": "#898989",
-        "textMuted": "#4d4d4d",
+        "bgDefault": "#0a0a0a",
+        "bgAlternative": "#080808",
+        "bgPage": "#0f0f0f",
+        "bgCard": "#0c0c0c",
+        "bgShellBase": "#0c0c0c",
+        "bgShellDot": "#252525",
+        "bgContentBase": "#080808",
+        "bgContentDot": "#1f1f1f",
+        "bgSurface75": "#121212",
+        "bgSurface100": "#141414",
+        "bgSurface200": "#1a1a1a",
+        "bgSurface300": "#222222",
+        "bgControl": "#141414",
+        "bgSelection": "#2a2a2a",
+        "bgOverlay": "#1a1a1a",
+        "bgOverlayHover": "#222222",
+        "borderMuted": "#1a1a1a",
+        "borderDefault": "#252525",
+        "borderStrong": "#333333",
+        "borderStronger": "#404040",
+        "borderControl": "#303030",
+        "textDefault": "#f5f5f5",
+        "textLight": "#a3a3a3",
+        "textLighter": "#737373",
+        "textMuted": "#525252",
         "white": "#ffffff",
         "black": "#000000",
-        "accent": "#C15F3C",
+        "accent": "#9b1c1c",
+        "accentDark": "#7f1d1d",
+        "accentLight": "#b91c1c",
+        "accentMuted": "#450a0a",
+        "accentSubtle": "#1c0a0a",
+        "accentBorder": "#3b0f0f",
+        "secondary": "#d97706",
+        "secondaryLight": "#f59e0b",
+        "secondaryMuted": "#451a03",
+        "phaseRed": "#dc2626",
+        "phasePink": "#ec4899",
+        "phaseAmber": "#f59e0b",
+        "phaseSlate": "#64748b",
         "errorDefault": "#dc2626",
         "errorLight": "#ef4444",
         "transparent": "transparent",
-        "background": "#121212",
-        "backgroundHover": "#171717",
-        "backgroundPress": "#181818",
-        "backgroundFocus": "#181818",
-        "color": "#fafafa",
-        "colorHover": "#fafafa",
-        "colorPress": "#b4b4b4",
-        "colorFocus": "#fafafa",
-        "borderColor": "#2e2e2e",
-        "borderColorHover": "#363636",
-        "borderColorPress": "#363636",
-        "borderColorFocus": "#C15F3C",
-        "placeholderColor": "#4d4d4d",
+        "background": "#0a0a0a",
+        "backgroundHover": "#121212",
+        "backgroundPress": "#141414",
+        "backgroundFocus": "#141414",
+        "color": "#f5f5f5",
+        "colorHover": "#f5f5f5",
+        "colorPress": "#a3a3a3",
+        "colorFocus": "#f5f5f5",
+        "borderColor": "#252525",
+        "borderColorHover": "#333333",
+        "borderColorPress": "#333333",
+        "borderColorFocus": "#9b1c1c",
+        "placeholderColor": "#525252",
+        "accentBackground": "#1c0a0a",
+        "accentColor": "#9b1c1c",
         "id": "dark"
       }
     },
@@ -29438,119 +29536,154 @@
         "isVar": true,
         "key": "$accent",
         "name": "c-accent",
-        "val": "#C15F3C",
+        "val": "#9b1c1c",
+        "variable": ""
+      },
+      "$color.accentBorder": {
+        "isVar": true,
+        "key": "$accentBorder",
+        "name": "c-accentBorder",
+        "val": "#3b0f0f",
+        "variable": ""
+      },
+      "$color.accentDark": {
+        "isVar": true,
+        "key": "$accentDark",
+        "name": "c-accentDark",
+        "val": "#7f1d1d",
+        "variable": ""
+      },
+      "$color.accentLight": {
+        "isVar": true,
+        "key": "$accentLight",
+        "name": "c-accentLight",
+        "val": "#b91c1c",
+        "variable": ""
+      },
+      "$color.accentMuted": {
+        "isVar": true,
+        "key": "$accentMuted",
+        "name": "c-accentMuted",
+        "val": "#450a0a",
+        "variable": ""
+      },
+      "$color.accentSubtle": {
+        "isVar": true,
+        "key": "$accentSubtle",
+        "name": "c-accentSubtle",
+        "val": "#1c0a0a",
         "variable": ""
       },
       "$color.bgAlternative": {
         "isVar": true,
         "key": "$bgAlternative",
         "name": "c-bgAlternative",
-        "val": "#0f0f0f",
+        "val": "#080808",
         "variable": ""
       },
       "$color.bgCard": {
         "isVar": true,
         "key": "$bgCard",
         "name": "c-bgCard",
-        "val": "#101010",
+        "val": "#0c0c0c",
         "variable": ""
       },
       "$color.bgContentBase": {
         "isVar": true,
         "key": "$bgContentBase",
         "name": "c-bgContentBase",
-        "val": "#0f0f0f",
+        "val": "#080808",
         "variable": ""
       },
       "$color.bgContentDot": {
         "isVar": true,
         "key": "$bgContentDot",
         "name": "c-bgContentDot",
-        "val": "#171717",
+        "val": "#1f1f1f",
         "variable": ""
       },
       "$color.bgControl": {
         "isVar": true,
         "key": "$bgControl",
         "name": "c-bgControl",
-        "val": "#1a1a1a",
+        "val": "#141414",
         "variable": ""
       },
       "$color.bgDefault": {
         "isVar": true,
         "key": "$bgDefault",
         "name": "c-bgDefault",
-        "val": "#121212",
+        "val": "#0a0a0a",
         "variable": ""
       },
       "$color.bgOverlay": {
         "isVar": true,
         "key": "$bgOverlay",
         "name": "c-bgOverlay",
-        "val": "#242424",
+        "val": "#1a1a1a",
         "variable": ""
       },
       "$color.bgOverlayHover": {
         "isVar": true,
         "key": "$bgOverlayHover",
         "name": "c-bgOverlayHover",
-        "val": "#2e2e2e",
+        "val": "#222222",
         "variable": ""
       },
       "$color.bgPage": {
         "isVar": true,
         "key": "$bgPage",
         "name": "c-bgPage",
-        "val": "#1a1a1a",
+        "val": "#0f0f0f",
         "variable": ""
       },
       "$color.bgSelection": {
         "isVar": true,
         "key": "$bgSelection",
         "name": "c-bgSelection",
-        "val": "#313131",
+        "val": "#2a2a2a",
         "variable": ""
       },
       "$color.bgShellBase": {
         "isVar": true,
         "key": "$bgShellBase",
         "name": "c-bgShellBase",
-        "val": "#151515",
+        "val": "#0c0c0c",
         "variable": ""
       },
       "$color.bgShellDot": {
         "isVar": true,
         "key": "$bgShellDot",
         "name": "c-bgShellDot",
-        "val": "#1d1d1d",
+        "val": "#252525",
         "variable": ""
       },
       "$color.bgSurface100": {
         "isVar": true,
         "key": "$bgSurface100",
         "name": "c-bgSurface100",
-        "val": "#181818",
+        "val": "#141414",
         "variable": ""
       },
       "$color.bgSurface200": {
         "isVar": true,
         "key": "$bgSurface200",
         "name": "c-bgSurface200",
-        "val": "#242424",
+        "val": "#1a1a1a",
         "variable": ""
       },
       "$color.bgSurface300": {
         "isVar": true,
         "key": "$bgSurface300",
         "name": "c-bgSurface300",
-        "val": "#292929",
+        "val": "#222222",
         "variable": ""
       },
       "$color.bgSurface75": {
         "isVar": true,
         "key": "$bgSurface75",
         "name": "c-bgSurface75",
-        "val": "#171717",
+        "val": "#121212",
         "variable": ""
       },
       "$color.black": {
@@ -29564,35 +29697,35 @@
         "isVar": true,
         "key": "$borderControl",
         "name": "c-borderControl",
-        "val": "#393939",
+        "val": "#303030",
         "variable": ""
       },
       "$color.borderDefault": {
         "isVar": true,
         "key": "$borderDefault",
         "name": "c-borderDefault",
-        "val": "#2e2e2e",
+        "val": "#252525",
         "variable": ""
       },
       "$color.borderMuted": {
         "isVar": true,
         "key": "$borderMuted",
         "name": "c-borderMuted",
-        "val": "#242424",
+        "val": "#1a1a1a",
         "variable": ""
       },
       "$color.borderStrong": {
         "isVar": true,
         "key": "$borderStrong",
         "name": "c-borderStrong",
-        "val": "#363636",
+        "val": "#333333",
         "variable": ""
       },
       "$color.borderStronger": {
         "isVar": true,
         "key": "$borderStronger",
         "name": "c-borderStronger",
-        "val": "#454545",
+        "val": "#404040",
         "variable": ""
       },
       "$color.errorDefault": {
@@ -29609,32 +29742,81 @@
         "val": "#ef4444",
         "variable": ""
       },
+      "$color.phaseAmber": {
+        "isVar": true,
+        "key": "$phaseAmber",
+        "name": "c-phaseAmber",
+        "val": "#f59e0b",
+        "variable": ""
+      },
+      "$color.phasePink": {
+        "isVar": true,
+        "key": "$phasePink",
+        "name": "c-phasePink",
+        "val": "#ec4899",
+        "variable": ""
+      },
+      "$color.phaseRed": {
+        "isVar": true,
+        "key": "$phaseRed",
+        "name": "c-phaseRed",
+        "val": "#dc2626",
+        "variable": ""
+      },
+      "$color.phaseSlate": {
+        "isVar": true,
+        "key": "$phaseSlate",
+        "name": "c-phaseSlate",
+        "val": "#64748b",
+        "variable": ""
+      },
+      "$color.secondary": {
+        "isVar": true,
+        "key": "$secondary",
+        "name": "c-secondary",
+        "val": "#d97706",
+        "variable": ""
+      },
+      "$color.secondaryLight": {
+        "isVar": true,
+        "key": "$secondaryLight",
+        "name": "c-secondaryLight",
+        "val": "#f59e0b",
+        "variable": ""
+      },
+      "$color.secondaryMuted": {
+        "isVar": true,
+        "key": "$secondaryMuted",
+        "name": "c-secondaryMuted",
+        "val": "#451a03",
+        "variable": ""
+      },
       "$color.textDefault": {
         "isVar": true,
         "key": "$textDefault",
         "name": "c-textDefault",
-        "val": "#fafafa",
+        "val": "#f5f5f5",
         "variable": ""
       },
       "$color.textLight": {
         "isVar": true,
         "key": "$textLight",
         "name": "c-textLight",
-        "val": "#b4b4b4",
+        "val": "#a3a3a3",
         "variable": ""
       },
       "$color.textLighter": {
         "isVar": true,
         "key": "$textLighter",
         "name": "c-textLighter",
-        "val": "#898989",
+        "val": "#737373",
         "variable": ""
       },
       "$color.textMuted": {
         "isVar": true,
         "key": "$textMuted",
         "name": "c-textMuted",
-        "val": "#4d4d4d",
+        "val": "#525252",
         "variable": ""
       },
       "$color.transparent": {
@@ -29662,49 +29844,49 @@
         "isVar": true,
         "key": "$1",
         "name": "t-radius-1",
-        "val": 2,
+        "val": 4,
         "variable": ""
       },
       "$radius.2": {
         "isVar": true,
         "key": "$2",
         "name": "t-radius-2",
-        "val": 4,
+        "val": 8,
         "variable": ""
       },
       "$radius.3": {
         "isVar": true,
         "key": "$3",
         "name": "t-radius-3",
-        "val": 6,
+        "val": 12,
         "variable": ""
       },
       "$radius.4": {
         "isVar": true,
         "key": "$4",
         "name": "t-radius-4",
-        "val": 8,
+        "val": 16,
         "variable": ""
       },
       "$radius.5": {
         "isVar": true,
         "key": "$5",
         "name": "t-radius-5",
-        "val": 10,
+        "val": 20,
         "variable": ""
       },
       "$radius.6": {
         "isVar": true,
         "key": "$6",
         "name": "t-radius-6",
-        "val": 12,
+        "val": 24,
         "variable": ""
       },
       "$radius.true": {
         "isVar": true,
         "key": "$true",
         "name": "t-radius-true",
-        "val": 6,
+        "val": 12,
         "variable": ""
       },
       "$size.0": {

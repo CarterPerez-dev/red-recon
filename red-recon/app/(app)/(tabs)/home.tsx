@@ -3,18 +3,27 @@
  * home.tsx
  */
 
-import { useCycleStatus, usePartner, usePartnerExists, usePhaseInfo } from '@/api/hooks'
-import { CyclePhase, PHASE_COLORS, PHASE_LABELS } from '@/api/types'
+import { useCycleStatus, usePartner, usePartnerExists } from '@/api/hooks'
+import {
+  CyclePhase,
+  DEFCON_LEVELS,
+  PHASE_BG_COLORS,
+  PHASE_CODENAMES,
+  PHASE_COLORS,
+  PHASE_DESCRIPTIONS,
+  TACTICAL_TIPS,
+} from '@/api/types'
 import { DottedBackground } from '@/shared/components'
 import { colors } from '@/theme/tokens'
 import { router } from 'expo-router'
-import { Bell, CalendarDays, Clock, Droplet, Heart, TrendingUp } from 'lucide-react-native'
+import { AlertTriangle, Bell, CalendarDays, ChevronRight, Clock, Droplet, Heart, Shield, TrendingUp, Trophy } from 'lucide-react-native'
 import type React from 'react'
-import { ActivityIndicator, Pressable } from 'react-native'
+import { useMemo } from 'react'
+import { ActivityIndicator, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Stack, Text, XStack, YStack } from 'tamagui'
 
-function PhaseIndicator({
+function DefconCard({
   phase,
   phaseDay,
 }: {
@@ -22,29 +31,44 @@ function PhaseIndicator({
   phaseDay: number
 }): React.ReactElement {
   const phaseColor = PHASE_COLORS[phase] ?? colors.textMuted.val
-  const phaseLabel = PHASE_LABELS[phase] ?? 'Unknown'
+  const phaseBg = PHASE_BG_COLORS[phase] ?? 'transparent'
+  const defcon = DEFCON_LEVELS[phase]
+  const codename = PHASE_CODENAMES[phase]
+  const description = PHASE_DESCRIPTIONS[phase]
 
   return (
     <Stack
-      backgroundColor="$bgSurface100"
+      backgroundColor={phaseBg}
       borderWidth={1}
-      borderColor="$borderDefault"
-      borderRadius="$4"
+      borderColor={phaseColor}
+      borderRadius="$3"
       padding="$5"
     >
-      <XStack alignItems="center" gap="$3" marginBottom="$3">
+      <XStack alignItems="center" justifyContent="space-between" marginBottom="$3">
+        <XStack alignItems="center" gap="$2">
+          <AlertTriangle size={16} color={phaseColor} />
+          <Text fontSize={13} fontWeight="700" color={phaseColor} fontFamily="$heading" letterSpacing={1}>
+            {defcon.label}
+          </Text>
+        </XStack>
         <Stack
-          width={12}
-          height={12}
-          borderRadius={6}
           backgroundColor={phaseColor}
-        />
-        <Text fontSize={18} fontWeight="600" color="$textDefault">
-          {phaseLabel} Phase
-        </Text>
+          paddingVertical="$1"
+          paddingHorizontal="$2.5"
+          borderRadius="$1"
+        >
+          <Text fontSize={10} fontWeight="700" color="$white" fontFamily="$body" letterSpacing={0.5}>
+            DAY {phaseDay}
+          </Text>
+        </Stack>
       </XStack>
-      <Text fontSize={14} color="$textLighter">
-        Day {phaseDay} of this phase
+
+      <Text fontSize={18} fontWeight="700" color="$textDefault" fontFamily="$heading" marginBottom="$2">
+        {codename}
+      </Text>
+
+      <Text fontSize={13} color="$textLight" fontFamily="$body" lineHeight={19}>
+        {description}
       </Text>
     </Stack>
   )
@@ -54,59 +78,121 @@ function StatCard({
   icon,
   label,
   value,
-  subtext,
+  highlight,
 }: {
   icon: React.ReactNode
   label: string
   value: string
-  subtext?: string
+  highlight?: boolean
 }): React.ReactElement {
   return (
     <Stack
       flex={1}
-      backgroundColor="$bgSurface100"
+      backgroundColor={highlight ? '$accentSubtle' : '$bgSurface100'}
       borderWidth={1}
-      borderColor="$borderDefault"
-      borderRadius="$4"
+      borderColor={highlight ? '$accentBorder' : '$borderDefault'}
+      borderRadius="$3"
       padding="$4"
     >
-      <XStack alignItems="center" gap="$2" marginBottom="$2">
+      <XStack alignItems="center" gap="$2" marginBottom="$3">
         {icon}
-        <Text fontSize={12} color="$textLighter">
+        <Text fontSize={12} color="$textMuted" fontFamily="$body" textTransform="uppercase" letterSpacing={0.5}>
           {label}
         </Text>
       </XStack>
-      <Text fontSize={20} fontWeight="600" color="$textDefault">
+      <Text
+        fontSize={26}
+        fontWeight="700"
+        color={highlight ? '$accent' : '$textDefault'}
+        fontFamily="$heading"
+        letterSpacing={-0.5}
+      >
         {value}
       </Text>
-      {subtext && (
-        <Text fontSize={12} color="$textMuted" marginTop="$1">
-          {subtext}
-        </Text>
-      )}
     </Stack>
   )
 }
 
-function PhaseTip({ tip }: { tip: string }): React.ReactElement {
+function TacticalIntelCard({ phase }: { phase?: CyclePhase }): React.ReactElement {
+  const phaseColor = phase ? PHASE_COLORS[phase] : colors.accent.val
+  const tips = phase ? TACTICAL_TIPS[phase] : TACTICAL_TIPS[CyclePhase.UNKNOWN]
+
+  const randomTip = useMemo(() => {
+    const today = new Date()
+    const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate()
+    const index = seed % tips.length
+    return tips[index]
+  }, [tips])
+
   return (
     <Stack
       backgroundColor="$bgSurface100"
       borderWidth={1}
       borderColor="$borderDefault"
-      borderRadius="$4"
+      borderRadius="$3"
       padding="$5"
+      borderLeftWidth={3}
+      borderLeftColor={phaseColor}
     >
       <XStack alignItems="center" gap="$2" marginBottom="$3">
-        <TrendingUp size={16} color={colors.accent.val} />
-        <Text fontSize={14} fontWeight="500" color="$textDefault">
-          Today's Tip
+        <Shield size={16} color={phaseColor} />
+        <Text fontSize={12} fontWeight="700" color={phaseColor} fontFamily="$body" letterSpacing={1}>
+          TACTICAL INTEL
         </Text>
       </XStack>
-      <Text fontSize={14} color="$textLight" lineHeight={20}>
-        {tip}
+      <Text fontSize={14} color="$textLight" lineHeight={21} fontFamily="$body">
+        {randomTip}
       </Text>
     </Stack>
+  )
+}
+
+function QuickAction({
+  icon,
+  label,
+  subtitle,
+  onPress,
+}: {
+  icon: React.ReactNode
+  label: string
+  subtitle: string
+  onPress: () => void
+}): React.ReactElement {
+  return (
+    <Pressable onPress={onPress}>
+      <Stack
+        backgroundColor="$bgSurface100"
+        borderWidth={1}
+        borderColor="$borderDefault"
+        borderRadius="$3"
+        padding="$4"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <XStack alignItems="center" gap="$3" flex={1}>
+          <Stack
+            width={40}
+            height={40}
+            borderRadius="$2"
+            backgroundColor="$bgSurface200"
+            alignItems="center"
+            justifyContent="center"
+          >
+            {icon}
+          </Stack>
+          <YStack flex={1}>
+            <Text fontSize={15} fontWeight="500" color="$textDefault" fontFamily="$body">
+              {label}
+            </Text>
+            <Text fontSize={12} color="$textMuted" fontFamily="$body">
+              {subtitle}
+            </Text>
+          </YStack>
+        </XStack>
+        <ChevronRight size={18} color={colors.textMuted.val} />
+      </Stack>
+    </Pressable>
   )
 }
 
@@ -120,22 +206,24 @@ function FeatureItem({
   description: string
 }): React.ReactElement {
   return (
-    <XStack gap="$3" alignItems="flex-start">
+    <XStack gap="$4" alignItems="flex-start">
       <Stack
-        width={36}
-        height={36}
-        borderRadius={18}
-        backgroundColor="$bgSurface200"
+        width={44}
+        height={44}
+        borderRadius="$2"
+        backgroundColor="$accentSubtle"
+        borderWidth={1}
+        borderColor="$accentBorder"
         alignItems="center"
         justifyContent="center"
       >
         {icon}
       </Stack>
       <YStack flex={1}>
-        <Text fontSize={14} fontWeight="500" color="$textDefault">
+        <Text fontSize={15} fontWeight="600" color="$textDefault" fontFamily="$body">
           {title}
         </Text>
-        <Text fontSize={12} color="$textMuted" marginTop="$1">
+        <Text fontSize={13} color="$textLight" marginTop="$1" fontFamily="$body" lineHeight={18}>
           {description}
         </Text>
       </YStack>
@@ -147,33 +235,41 @@ function SetupPrompt(): React.ReactElement {
   return (
     <DottedBackground>
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-        <YStack flex={1} padding="$6">
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flexGrow: 1, padding: 24 }}
+          showsVerticalScrollIndicator={false}
+        >
           <YStack flex={1} justifyContent="center" alignItems="center">
             <Stack
-              width={64}
-              height={64}
-              borderRadius={32}
+              width={72}
+              height={72}
+              borderRadius={36}
               backgroundColor="$accent"
               alignItems="center"
               justifyContent="center"
-              marginBottom="$4"
+              marginBottom="$5"
             >
-              <Heart size={32} color={colors.white.val} />
+              <Heart size={36} color={colors.white.val} />
             </Stack>
+
             <Text
-              fontSize={26}
-              fontWeight="600"
+              fontSize={28}
+              fontWeight="700"
               color="$textDefault"
               textAlign="center"
               marginBottom="$2"
+              fontFamily="$heading"
+              letterSpacing={-0.5}
             >
               Welcome to RedRecon
             </Text>
             <Text
-              fontSize={14}
-              color="$textLighter"
+              fontSize={15}
+              color="$textLight"
               textAlign="center"
               marginBottom="$8"
+              fontFamily="$body"
             >
               Understand her cycle, be a better partner.
             </Text>
@@ -182,39 +278,39 @@ function SetupPrompt(): React.ReactElement {
               backgroundColor="$bgSurface100"
               borderWidth={1}
               borderColor="$borderDefault"
-              borderRadius="$4"
-              padding="$5"
+              borderRadius="$3"
+              padding="$6"
               width="100%"
-              maxWidth={340}
-              gap="$4"
+              maxWidth={360}
+              gap="$5"
             >
               <FeatureItem
-                icon={<CalendarDays size={18} color={colors.accent.val} />}
+                icon={<CalendarDays size={20} color={colors.accent.val} />}
                 title="Track Her Cycle"
                 description="Know what phase she's in and what to expect"
               />
               <FeatureItem
-                icon={<Bell size={18} color={colors.accent.val} />}
+                icon={<Bell size={20} color={colors.accent.val} />}
                 title="Get Notified"
                 description="Heads up before period, PMS, and ovulation"
               />
               <FeatureItem
-                icon={<TrendingUp size={18} color={colors.accent.val} />}
+                icon={<TrendingUp size={20} color={colors.accent.val} />}
                 title="Daily Insights"
                 description="Tips for each phase to support her better"
               />
             </Stack>
           </YStack>
 
-          <Stack marginTop="$6">
+          <Stack marginTop="$8">
             <Pressable onPress={() => router.push('/(app)/partner-setup')}>
               <Stack
                 backgroundColor="$accent"
-                borderRadius="$3"
+                borderRadius="$2"
                 paddingVertical="$4"
                 alignItems="center"
               >
-                <Text fontSize={14} fontWeight="500" color="$white">
+                <Text fontSize={15} fontWeight="600" color="$white" fontFamily="$body">
                   Get Started
                 </Text>
               </Stack>
@@ -224,11 +320,12 @@ function SetupPrompt(): React.ReactElement {
               color="$textMuted"
               textAlign="center"
               marginTop="$3"
+              fontFamily="$body"
             >
               Takes less than a minute to set up
             </Text>
           </Stack>
-        </YStack>
+        </ScrollView>
       </SafeAreaView>
     </DottedBackground>
   )
@@ -237,7 +334,6 @@ function SetupPrompt(): React.ReactElement {
 function DashboardContent(): React.ReactElement {
   const { data: partner } = usePartner()
   const { data: cycleStatus, isLoading: cycleLoading } = useCycleStatus()
-  const { data: phaseInfo } = usePhaseInfo()
 
   if (cycleLoading) {
     return (
@@ -247,83 +343,88 @@ function DashboardContent(): React.ReactElement {
     )
   }
 
-  const currentPhaseInfo = phaseInfo?.find(
-    (p) => p.phase === cycleStatus?.phase
-  )
-  const tip = currentPhaseInfo?.tip ?? 'Check back for tips during active tracking.'
-
   const daysUntilText = cycleStatus?.days_until_period
-    ? cycleStatus.days_until_period === 1
-      ? '1 day'
-      : `${cycleStatus.days_until_period} days`
-    : 'N/A'
+    ? `${cycleStatus.days_until_period}`
+    : '--'
+
+  const periodActive = cycleStatus?.is_period_active
 
   return (
-    <YStack flex={1} padding="$6">
-      <Stack marginBottom="$6">
-        <Text
-          fontSize={26}
-          fontWeight="600"
-          color="$textDefault"
-          marginBottom="$2"
-        >
-          {partner?.name ?? 'Partner'}
-        </Text>
-        <Text fontSize={14} color="$textLighter">
-          Cycle Day {cycleStatus?.current_day ?? '--'} of {cycleStatus?.cycle_length ?? '--'}
-        </Text>
-      </Stack>
-
-      {cycleStatus && (
-        <PhaseIndicator
-          phase={cycleStatus.phase}
-          phaseDay={cycleStatus.phase_day}
-        />
-      )}
-
-      <XStack gap="$3" marginTop="$4">
-        <StatCard
-          icon={<Clock size={14} color={colors.textLighter.val} />}
-          label="Until Period"
-          value={daysUntilText}
-          subtext={cycleStatus?.is_period_active ? 'Active now' : undefined}
-        />
-        <StatCard
-          icon={<Droplet size={14} color={colors.textLighter.val} />}
-          label="Period Length"
-          value={`${partner?.average_period_length ?? '--'} days`}
-        />
-      </XStack>
-
-      <Stack marginTop="$4">
-        <PhaseTip tip={tip} />
-      </Stack>
-
-      <Stack marginTop="$4">
-        <Pressable onPress={() => router.push('/(app)/(tabs)/calendar')}>
-          <Stack
-            backgroundColor="$bgSurface100"
-            borderWidth={1}
-            borderColor="$borderDefault"
-            borderRadius="$4"
-            padding="$4"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <XStack alignItems="center" gap="$3">
-              <CalendarDays size={18} color={colors.textLight.val} />
-              <Text fontSize={14} color="$textDefault">
-                View Calendar
-              </Text>
-            </XStack>
-            <Text fontSize={12} color="$textMuted">
-              Track & Predict
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+      showsVerticalScrollIndicator={false}
+    >
+      <YStack gap="$5">
+        <YStack gap="$1">
+          <YStack>
+            <Text
+              fontSize={32}
+              fontWeight="700"
+              color="$textDefault"
+              fontFamily="$heading"
+              letterSpacing={-0.5}
+            >
+              {partner?.name ?? 'Partner'}
             </Text>
-          </Stack>
-        </Pressable>
-      </Stack>
-    </YStack>
+            <Stack
+              width={40}
+              height={3}
+              backgroundColor="$accent"
+              borderRadius="$1"
+              marginTop="$1.5"
+            />
+          </YStack>
+          <Text fontSize={14} color="$textLight" fontFamily="$body" marginTop="$2">
+            Cycle Day {cycleStatus?.current_day ?? '--'} of {cycleStatus?.cycle_length ?? '--'}
+          </Text>
+        </YStack>
+
+        {cycleStatus && (
+          <DefconCard
+            phase={cycleStatus.phase}
+            phaseDay={cycleStatus.phase_day}
+          />
+        )}
+
+        <XStack gap="$3">
+          <StatCard
+            icon={<Clock size={14} color={colors.textMuted.val} />}
+            label="Until Period"
+            value={periodActive ? 'Now' : `${daysUntilText} days`}
+            highlight={periodActive}
+          />
+          <StatCard
+            icon={<Droplet size={14} color={colors.textMuted.val} />}
+            label="Period Len"
+            value={`${partner?.average_period_length ?? '--'} days`}
+          />
+        </XStack>
+
+        <TacticalIntelCard phase={cycleStatus?.phase} />
+
+        <YStack gap="$3">
+          <QuickAction
+            icon={<CalendarDays size={18} color={colors.textLight.val} />}
+            label="View Calendar"
+            subtitle="Track & predict cycles"
+            onPress={() => router.push('/(app)/(tabs)/calendar')}
+          />
+          <QuickAction
+            icon={<AlertTriangle size={18} color={colors.errorDefault.val} />}
+            label="Emergency Protocols"
+            subtitle="Survival guide for the trenches"
+            onPress={() => router.push('/(app)/emergency-protocols')}
+          />
+          <QuickAction
+            icon={<Trophy size={18} color={colors.secondaryLight.val} />}
+            label="Achievements"
+            subtitle="Collect badges, prove your worth"
+            onPress={() => router.push('/(app)/achievements')}
+          />
+        </YStack>
+      </YStack>
+    </ScrollView>
   )
 }
 

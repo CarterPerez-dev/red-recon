@@ -252,6 +252,11 @@ export default function PartnerSetupScreen(): React.ReactElement {
       average_period_length: periodLength,
       cycle_regularity: regularity,
       last_period_start: lastPeriodDate,
+      notification_period_reminder: true,
+      notification_pms_alert: true,
+      notification_ovulation_alert: false,
+      reminder_days_before: 3,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     }
 
     createPartner.mutate(data, {

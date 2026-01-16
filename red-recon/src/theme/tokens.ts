@@ -5,46 +5,58 @@
 
 import { createTokens } from 'tamagui'
 
-const YOUR_ACCENT_COLOR = '#780606'
-
 export const tokens = createTokens({
   color: {
-    bgDefault: '#121212',
-    bgAlternative: '#0f0f0f',
-    bgPage: '#1a1a1a',
-    bgCard: '#101010',
+    bgDefault: '#0a0a0a',
+    bgAlternative: '#080808',
+    bgPage: '#0f0f0f',
+    bgCard: '#0c0c0c',
 
-    bgShellBase: '#151515',
-    bgShellDot: '#1d1d1d',
+    bgShellBase: '#0c0c0c',
+    bgShellDot: '#252525',
 
-    bgContentBase: '#0f0f0f',
-    bgContentDot: '#171717',
+    bgContentBase: '#080808',
+    bgContentDot: '#1f1f1f',
 
-    bgSurface75: '#171717',
-    bgSurface100: '#181818',
-    bgSurface200: '#242424',
-    bgSurface300: '#292929',
+    bgSurface75: '#121212',
+    bgSurface100: '#141414',
+    bgSurface200: '#1a1a1a',
+    bgSurface300: '#222222',
 
-    bgControl: '#1a1a1a',
-    bgSelection: '#313131',
-    bgOverlay: '#242424',
-    bgOverlayHover: '#2e2e2e',
+    bgControl: '#141414',
+    bgSelection: '#2a2a2a',
+    bgOverlay: '#1a1a1a',
+    bgOverlayHover: '#222222',
 
-    borderMuted: '#242424',
-    borderDefault: '#2e2e2e',
-    borderStrong: '#363636',
-    borderStronger: '#454545',
-    borderControl: '#393939',
+    borderMuted: '#1a1a1a',
+    borderDefault: '#252525',
+    borderStrong: '#333333',
+    borderStronger: '#404040',
+    borderControl: '#303030',
 
-    textDefault: '#fafafa',
-    textLight: '#b4b4b4',
-    textLighter: '#898989',
-    textMuted: '#4d4d4d',
+    textDefault: '#f5f5f5',
+    textLight: '#a3a3a3',
+    textLighter: '#737373',
+    textMuted: '#525252',
 
     white: '#ffffff',
     black: '#000000',
 
-    accent: YOUR_ACCENT_COLOR,
+    accent: '#9b1c1c',
+    accentDark: '#7f1d1d',
+    accentLight: '#b91c1c',
+    accentMuted: '#450a0a',
+    accentSubtle: '#1c0a0a',
+    accentBorder: '#3b0f0f',
+
+    secondary: '#d97706',
+    secondaryLight: '#f59e0b',
+    secondaryMuted: '#451a03',
+
+    phaseRed: '#dc2626',
+    phasePink: '#ec4899',
+    phaseAmber: '#f59e0b',
+    phaseSlate: '#64748b',
 
     errorDefault: '#dc2626',
     errorLight: '#ef4444',
@@ -102,13 +114,13 @@ export const tokens = createTokens({
 
   radius: {
     0: 0,
-    1: 2,
-    2: 4,
-    3: 6,
-    4: 8,
-    5: 10,
-    6: 12,
-    true: 6,
+    1: 4,
+    2: 8,
+    3: 12,
+    4: 16,
+    5: 20,
+    6: 24,
+    true: 12,
   },
 
   zIndex: {
@@ -122,3 +134,8 @@ export const tokens = createTokens({
 })
 
 export const colors = tokens.color
+
+export const gridConfig = {
+  dotSize: 1.2,
+  dotSpacing: 14,
+} as const

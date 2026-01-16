@@ -4,7 +4,7 @@
  */
 
 import { useCalendarMonth } from '@/api/hooks'
-import { type CalendarDay, PHASE_COLORS, PHASE_LABELS } from '@/api/types'
+import { type CalendarDay, CyclePhase, PHASE_COLORS } from '@/api/types'
 import { PeriodLogSheet } from '@/features/calendar'
 import { DottedBackground } from '@/shared/components'
 import { haptics } from '@/shared/utils'
@@ -12,20 +12,42 @@ import { colors } from '@/theme/tokens'
 import { ChevronLeft, ChevronRight } from 'lucide-react-native'
 import type React from 'react'
 import { useCallback, useMemo, useState } from 'react'
-import { ActivityIndicator, Pressable } from 'react-native'
+import { ActivityIndicator, Dimensions, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Stack, Text, XStack, YStack } from 'tamagui'
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
+const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'] as const
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ] as const
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const CALENDAR_PADDING = 16
+const CELL_GAP = 6
+const CELL_SIZE = (SCREEN_WIDTH - (CALENDAR_PADDING * 2) - (CELL_GAP * 6)) / 7
+
 interface CalendarCellData {
   day: CalendarDay | null
   dayNumber: number | null
   isToday: boolean
+  dateStr: string | null
+}
+
+function getPhaseBackgroundColor(phase: CyclePhase | undefined): string {
+  if (!phase) return 'transparent'
+  switch (phase) {
+    case CyclePhase.MENSTRUAL:
+      return 'rgba(220, 38, 38, 0.12)'
+    case CyclePhase.FOLLICULAR:
+      return 'rgba(236, 72, 153, 0.10)'
+    case CyclePhase.OVULATION:
+      return 'rgba(245, 158, 11, 0.12)'
+    case CyclePhase.LUTEAL:
+      return 'rgba(100, 116, 139, 0.10)'
+    default:
+      return 'transparent'
+  }
 }
 
 function CalendarDayCell({
@@ -38,42 +60,34 @@ function CalendarDayCell({
   const { day, dayNumber, isToday } = data
 
   if (dayNumber === null) {
-    return <Stack flex={1} aspectRatio={1} />
+    return <Stack width={CELL_SIZE} height={CELL_SIZE} />
   }
 
-  const phaseColor = day ? (PHASE_COLORS[day.phase] ?? colors.textMuted.val) : colors.textMuted.val
   const isPeriod = day?.is_period ?? false
   const isPredicted = (day?.is_predicted_period ?? false) && !isPeriod
+  const phaseBg = getPhaseBackgroundColor(day?.phase)
 
   return (
-    <Pressable style={{ flex: 1 }} onPress={onPress}>
+    <Pressable onPress={onPress}>
       <Stack
-        flex={1}
-        aspectRatio={1}
+        width={CELL_SIZE}
+        height={CELL_SIZE}
         alignItems="center"
         justifyContent="center"
         borderRadius="$2"
-        backgroundColor={isPeriod ? '#dc2626' : isPredicted ? '$bgSurface200' : 'transparent'}
-        borderWidth={isToday ? 2 : 0}
-        borderColor={isToday ? '$accent' : 'transparent'}
+        backgroundColor={isPeriod ? colors.phaseRed.val : phaseBg}
+        borderWidth={isToday ? 2 : isPredicted ? 1 : 0}
+        borderColor={isToday ? colors.accent.val : isPredicted ? colors.accentBorder.val : 'transparent'}
+        borderStyle={isPredicted && !isToday ? 'dashed' : 'solid'}
       >
         <Text
-          fontSize={14}
+          fontSize={15}
           fontWeight={isToday ? '600' : '400'}
+          fontFamily="$body"
           color={isPeriod ? '$white' : isToday ? '$accent' : '$textDefault'}
         >
           {dayNumber}
         </Text>
-        {day?.cycle_day && (
-          <Stack
-            position="absolute"
-            bottom={2}
-            width={4}
-            height={4}
-            borderRadius={2}
-            backgroundColor={phaseColor}
-          />
-        )}
       </Stack>
     </Pressable>
   )
@@ -111,7 +125,7 @@ function CalendarGrid({
     let currentWeek: CalendarCellData[] = []
 
     for (let i = 0; i < firstDayOfMonth; i++) {
-      currentWeek.push({ day: null, dayNumber: null, isToday: false })
+      currentWeek.push({ day: null, dayNumber: null, isToday: false, dateStr: null })
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
@@ -121,6 +135,7 @@ function CalendarGrid({
         day,
         dayNumber: d,
         isToday: dateStr === todayStr,
+        dateStr,
       })
 
       if (currentWeek.length === 7) {
@@ -130,7 +145,7 @@ function CalendarGrid({
     }
 
     while (currentWeek.length > 0 && currentWeek.length < 7) {
-      currentWeek.push({ day: null, dayNumber: null, isToday: false })
+      currentWeek.push({ day: null, dayNumber: null, isToday: false, dateStr: null })
     }
     if (currentWeek.length === 7) {
       result.push(currentWeek)
@@ -140,30 +155,25 @@ function CalendarGrid({
   }, [daysByDate, daysInMonth, firstDayOfMonth, month, todayStr, year])
 
   return (
-    <YStack gap="$1">
-      <XStack>
-        {WEEKDAYS.map((day) => (
-          <Stack key={day} flex={1} alignItems="center" padding="$2">
-            <Text fontSize={12} color="$textMuted" fontWeight="500">
+    <YStack gap={CELL_GAP}>
+      <XStack justifyContent="space-between" paddingHorizontal="$1">
+        {WEEKDAYS.map((day, idx) => (
+          <Stack key={`${day}-${idx}`} width={CELL_SIZE} alignItems="center">
+            <Text fontSize={13} color="$textMuted" fontWeight="500" fontFamily="$body">
               {day}
             </Text>
           </Stack>
         ))}
       </XStack>
       {weeks.map((week, weekIndex) => (
-        <XStack key={`week-${weekIndex}`} gap="$1">
-          {week.map((cellData, dayIndex) => {
-            const dateStr = cellData.dayNumber
-              ? `${year}-${String(month).padStart(2, '0')}-${String(cellData.dayNumber).padStart(2, '0')}`
-              : null
-            return (
-              <CalendarDayCell
-                key={cellData.dayNumber ?? `empty-${weekIndex}-${dayIndex}`}
-                data={cellData}
-                onPress={dateStr ? () => onDayPress(dateStr, cellData.day) : undefined}
-              />
-            )
-          })}
+        <XStack key={`week-${weekIndex}`} justifyContent="space-between">
+          {week.map((cellData, dayIndex) => (
+            <CalendarDayCell
+              key={cellData.dateStr ?? `empty-${weekIndex}-${dayIndex}`}
+              data={cellData}
+              onPress={cellData.dateStr ? () => onDayPress(cellData.dateStr!, cellData.day) : undefined}
+            />
+          ))}
         </XStack>
       ))}
     </YStack>
@@ -172,10 +182,10 @@ function CalendarGrid({
 
 function PhaseLegend(): React.ReactElement {
   const phases = [
-    { key: 'menstrual', label: 'Menstrual', color: PHASE_COLORS.menstrual },
-    { key: 'follicular', label: 'Follicular', color: PHASE_COLORS.follicular },
-    { key: 'ovulation', label: 'Ovulation', color: PHASE_COLORS.ovulation },
-    { key: 'luteal', label: 'Luteal', color: PHASE_COLORS.luteal },
+    { label: 'Period', color: colors.phaseRed.val, bg: 'rgba(220, 38, 38, 0.12)' },
+    { label: 'Follicular', color: colors.phasePink.val, bg: 'rgba(236, 72, 153, 0.10)' },
+    { label: 'Ovulation', color: colors.phaseAmber.val, bg: 'rgba(245, 158, 11, 0.12)' },
+    { label: 'Luteal', color: colors.phaseSlate.val, bg: 'rgba(100, 116, 139, 0.10)' },
   ] as const
 
   return (
@@ -183,22 +193,28 @@ function PhaseLegend(): React.ReactElement {
       backgroundColor="$bgSurface100"
       borderWidth={1}
       borderColor="$borderDefault"
-      borderRadius="$4"
+      borderRadius="$3"
       padding="$4"
     >
-      <Text fontSize={12} color="$textMuted" marginBottom="$3">
-        PHASE LEGEND
-      </Text>
-      <XStack flexWrap="wrap" gap="$3">
-        {phases.map(({ key, label, color }) => (
-          <XStack key={key} alignItems="center" gap="$2">
+      <XStack flexWrap="wrap" gap="$4">
+        {phases.map(({ label, color, bg }) => (
+          <XStack key={label} alignItems="center" gap="$2">
             <Stack
-              width={8}
-              height={8}
-              borderRadius={4}
-              backgroundColor={color}
-            />
-            <Text fontSize={12} color="$textLight">
+              width={20}
+              height={20}
+              borderRadius="$1"
+              backgroundColor={bg}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Stack
+                width={8}
+                height={8}
+                borderRadius={4}
+                backgroundColor={color}
+              />
+            </Stack>
+            <Text fontSize={13} color="$textLight" fontFamily="$body">
               {label}
             </Text>
           </XStack>
@@ -220,14 +236,17 @@ export default function CalendarScreen(): React.ReactElement {
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<CalendarDay | null>(null)
 
   const goToPreviousMonth = useCallback(() => {
+    haptics.light()
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
   }, [])
 
   const goToNextMonth = useCallback(() => {
+    haptics.light()
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))
   }, [])
 
   const goToToday = useCallback(() => {
+    haptics.light()
     setCurrentDate(new Date())
   }, [])
 
@@ -238,91 +257,113 @@ export default function CalendarScreen(): React.ReactElement {
     setSheetVisible(true)
   }, [])
 
+  const isCurrentMonth = useMemo(() => {
+    const now = new Date()
+    return year === now.getFullYear() && month === now.getMonth() + 1
+  }, [year, month])
+
   return (
     <DottedBackground>
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-        <YStack flex={1} padding="$6">
-          <XStack
-            alignItems="center"
-            justifyContent="space-between"
-            marginBottom="$6"
-          >
-            <YStack>
-              <Text fontSize={26} fontWeight="600" color="$textDefault">
-                Calendar
-              </Text>
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ paddingHorizontal: CALENDAR_PADDING, paddingBottom: 32 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <YStack paddingTop="$6" gap="$5">
+            <XStack alignItems="center" justifyContent="space-between">
+              <Pressable onPress={goToPreviousMonth} hitSlop={12}>
+                <Stack
+                  width={40}
+                  height={40}
+                  borderRadius="$2"
+                  backgroundColor="$bgSurface100"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <ChevronLeft size={20} color={colors.textLight.val} />
+                </Stack>
+              </Pressable>
+
               <Pressable onPress={goToToday}>
-                <Text fontSize={12} color="$accent">
-                  Go to Today
-                </Text>
+                <YStack alignItems="center">
+                  <Text fontSize={20} fontWeight="600" color="$textDefault" fontFamily="$heading">
+                    {MONTH_NAMES[month - 1]}
+                  </Text>
+                  <Text fontSize={13} color="$textMuted" fontFamily="$body">
+                    {year}
+                  </Text>
+                </YStack>
               </Pressable>
-            </YStack>
 
-            <XStack alignItems="center" gap="$4">
-              <Pressable onPress={goToPreviousMonth}>
-                <ChevronLeft size={24} color={colors.textLight.val} />
-              </Pressable>
-              <Text fontSize={16} fontWeight="500" color="$textDefault" minWidth={120} textAlign="center">
-                {MONTH_NAMES[month - 1]} {year}
-              </Text>
-              <Pressable onPress={goToNextMonth}>
-                <ChevronRight size={24} color={colors.textLight.val} />
+              <Pressable onPress={goToNextMonth} hitSlop={12}>
+                <Stack
+                  width={40}
+                  height={40}
+                  borderRadius="$2"
+                  backgroundColor="$bgSurface100"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <ChevronRight size={20} color={colors.textLight.val} />
+                </Stack>
               </Pressable>
             </XStack>
-          </XStack>
 
-          <Stack
-            backgroundColor="$bgSurface100"
-            borderWidth={1}
-            borderColor="$borderDefault"
-            borderRadius="$4"
-            padding="$4"
-            marginBottom="$4"
-          >
-            {isLoading ? (
-              <Stack height={280} justifyContent="center" alignItems="center">
-                <ActivityIndicator size="large" color={colors.accent.val} />
-              </Stack>
-            ) : (
-              <CalendarGrid
-                days={calendarMonth?.days ?? []}
-                year={year}
-                month={month}
-                onDayPress={handleDayPress}
-              />
+            {!isCurrentMonth && (
+              <Pressable onPress={goToToday}>
+                <Stack
+                  backgroundColor="$accentSubtle"
+                  borderRadius="$2"
+                  paddingVertical="$2"
+                  paddingHorizontal="$4"
+                  alignSelf="center"
+                  borderWidth={1}
+                  borderColor="$accentBorder"
+                >
+                  <Text fontSize={13} color="$accent" fontWeight="500" fontFamily="$body">
+                    Back to Today
+                  </Text>
+                </Stack>
+              </Pressable>
             )}
-          </Stack>
 
-          <PhaseLegend />
+            <Stack
+              backgroundColor="$bgSurface100"
+              borderWidth={1}
+              borderColor="$borderDefault"
+              borderRadius="$3"
+              padding="$4"
+            >
+              {isLoading ? (
+                <Stack height={340} justifyContent="center" alignItems="center">
+                  <ActivityIndicator size="large" color={colors.accent.val} />
+                </Stack>
+              ) : (
+                <CalendarGrid
+                  days={calendarMonth?.days ?? []}
+                  year={year}
+                  month={month}
+                  onDayPress={handleDayPress}
+                />
+              )}
+            </Stack>
 
-          <Stack marginTop="$4">
-            <XStack gap="$3" alignItems="center">
-              <Stack
-                width={16}
-                height={16}
-                borderRadius="$2"
-                backgroundColor="#dc2626"
-              />
-              <Text fontSize={12} color="$textLight">
-                Period Day
+            <PhaseLegend />
+
+            <Stack
+              backgroundColor="$accentSubtle"
+              borderWidth={1}
+              borderColor="$accentBorder"
+              borderRadius="$3"
+              padding="$4"
+            >
+              <Text fontSize={13} color="$textLight" fontFamily="$body" lineHeight={20}>
+                Tap any day to log period start/end. Dashed borders indicate predicted period days.
               </Text>
-            </XStack>
-            <XStack gap="$3" alignItems="center" marginTop="$2">
-              <Stack
-                width={16}
-                height={16}
-                borderRadius="$2"
-                backgroundColor="$bgSurface200"
-                borderWidth={1}
-                borderColor="$borderDefault"
-                borderStyle="dashed"
-              />
-              <Text fontSize={12} color="$textLight">
-                Predicted Period
-              </Text>
-            </XStack>
-          </Stack>
-        </YStack>
+            </Stack>
+          </YStack>
+        </ScrollView>
 
         <PeriodLogSheet
           visible={sheetVisible}

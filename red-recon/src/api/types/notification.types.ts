@@ -28,18 +28,18 @@ export interface NotificationConfig {
 
 export const NOTIFICATION_CONTENT = {
   [NotificationType.PERIOD_REMINDER]: {
-    title: 'Period Incoming',
+    title: 'CODE RED IMMINENT',
     bodyTemplate: (days: number) =>
       days === 1
-        ? "Her period starts tomorrow. Stock check: supplies, snacks, patience."
-        : `T-minus ${days} days until her period. Time to prepare.`,
+        ? "this is not a drill. period starts TOMORROW. acquire snacks or perish."
+        : `T-minus ${days} days. stock up on chocolate and emotional resilience. godspeed.`,
   },
   [NotificationType.PMS_ALERT]: {
-    title: 'PMS Zone Ahead',
-    body: "Luteal phase starting. Extra patience and chocolate recommended.",
+    title: 'DEFCON 2 - STORM WARNING',
+    body: "PMS has entered the chat. everything you say will be held against you. tread lightly king.",
   },
   [NotificationType.OVULATION_ALERT]: {
-    title: 'Ovulation Window',
-    body: "Peak fertility time. Good vibes and energy levels.",
+    title: 'THE GLOW UP ERA',
+    body: "she's in her hot girl phase. compliments are mandatory. don't be weird about it.",
   },
 } as const
