@@ -3,7 +3,7 @@
 // DottedBackground.tsx
 // ===================
 
-import { colors } from '@/theme/tokens'
+import { colors, gridConfig } from '@/theme/tokens'
 import type React from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 import Svg, { Circle, Defs, Pattern, Rect } from 'react-native-svg'
@@ -18,8 +18,8 @@ interface DottedBackgroundProps {
 export function DottedBackground({
   children,
   dotColor = colors.bgShellDot.val,
-  dotSize = 1,
-  dotSpacing = 16,
+  dotSize = gridConfig.dotSize,
+  dotSpacing = gridConfig.dotSpacing,
 }: DottedBackgroundProps): React.ReactElement {
   const { width, height } = Dimensions.get('window')
 

@@ -4,6 +4,7 @@ schemas.py
 """
 
 from datetime import date
+from uuid import UUID
 
 from pydantic import Field, model_validator
 
@@ -46,7 +47,7 @@ class PeriodLogResponse(BaseResponseSchema):
     """
     Schema for period log API responses
     """
-    partner_id: str
+    partner_id: UUID
     start_date: date
     end_date: date | None
     cycle_length: int | None

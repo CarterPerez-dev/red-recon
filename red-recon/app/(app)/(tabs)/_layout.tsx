@@ -5,7 +5,7 @@
 
 import { colors } from '@/theme/tokens'
 import { Tabs } from 'expo-router'
-import { Home, Settings } from 'lucide-react-native'
+import { CalendarDays, ClipboardList, Home, Settings } from 'lucide-react-native'
 import type React from 'react'
 
 export default function TabsLayout(): React.ReactElement {
@@ -34,6 +34,20 @@ export default function TabsLayout(): React.ReactElement {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: 'Calendar',
+          tabBarIcon: ({ color, size }) => <CalendarDays size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="log"
+        options={{
+          title: 'Log',
+          tabBarIcon: ({ color, size }) => <ClipboardList size={size} color={color} />,
         }}
       />
       <Tabs.Screen

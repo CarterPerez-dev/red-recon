@@ -22,6 +22,9 @@ export const darkTheme = {
   borderColorFocus: tokens.color.accent,
 
   placeholderColor: tokens.color.textMuted,
+
+  accentBackground: tokens.color.accentSubtle,
+  accentColor: tokens.color.accent,
 }
 
 export const themes = {

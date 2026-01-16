@@ -13,30 +13,36 @@ import { tokens } from './tokens'
 
 const interFont = createInterFont({
   size: {
-    1: 12,
-    2: 14,
-    3: 16,
-    4: 18,
+    1: 11,
+    2: 13,
+    3: 15,
+    4: 17,
     5: 20,
     6: 24,
     7: 28,
-    8: 32,
-    true: 14,
+    8: 34,
+    9: 40,
+    true: 15,
   },
   weight: {
     4: '400',
     5: '500',
     6: '600',
+    7: '700',
     true: '400',
   },
   letterSpacing: {
     4: 0,
+    5: -0.2,
+    6: -0.3,
+    7: -0.4,
     true: 0,
   },
   face: {
     400: { normal: 'Inter' },
     500: { normal: 'InterMedium' },
     600: { normal: 'InterSemiBold' },
+    700: { normal: 'InterBold' },
   },
 })
 

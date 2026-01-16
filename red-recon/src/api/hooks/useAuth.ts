@@ -124,7 +124,7 @@ export const useLogout = (): UseMutationResult<void, Error, void> => {
 
       logout()
 
-      queryClient.removeQueries({ queryKey: authQueries.all() })
+      queryClient.clear()
 
       router.replace('/(auth)/login')
     },
@@ -134,7 +134,7 @@ export const useLogout = (): UseMutationResult<void, Error, void> => {
 
       logout()
 
-      queryClient.removeQueries({ queryKey: authQueries.all() })
+      queryClient.clear()
 
       router.replace('/(auth)/login')
     },
@@ -171,7 +171,7 @@ export const useLogoutAll = (): UseMutationResult<
 
       logout()
 
-      queryClient.removeQueries({ queryKey: authQueries.all() })
+      queryClient.clear()
 
       router.replace('/(auth)/login')
     },

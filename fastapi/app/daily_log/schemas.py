@@ -4,6 +4,7 @@ schemas.py
 """
 
 from datetime import date
+from uuid import UUID
 
 from pydantic import Field
 
@@ -62,7 +63,7 @@ class DailyLogResponse(BaseResponseSchema):
     """
     Schema for daily log API responses
     """
-    partner_id: str
+    partner_id: UUID
     log_date: date
     mood: Mood | None
     energy_level: int | None
